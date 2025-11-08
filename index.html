@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetaVoices - Selezione Voce</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Stili CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="assets/images/Metavoices.png" alt="MetaVoices" class="logo-image">
+                <h1>MetaVoices</h1>
+                <span class="version">v3.0</span>
+            </div>
+            <div class="header-actions">
+                <div class="progress-indicator">
+                    <span class="progress-step active">1</span>
+                    <span class="progress-label">Voce</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenuto principale -->
+    <main class="main-content vertical-flow">
+        <!-- Textarea Centrale -->
+        <section class="text-section">
+            <div class="section-header">
+                <h2><i class="fas fa-edit"></i> Testo da Sintetizzare</h2>
+            </div>
+            <div class="text-container">
+                <textarea 
+                    id="mainTextInput" 
+                    placeholder="Inserisci il testo che vuoi trasformare in audio... oppure trascina un file qui"
+                    rows="12"
+                >Ciao, sono MetaVoices. Questo è un esempio di sintesi vocale con controlli avanzati per la lingua italiana. Il sistema analizza automaticamente il testo per correggere parole ambigue e migliorare la pronuncia.</textarea>
+                
+                <div class="text-actions">
+                    <button id="loadFileBtn" class="btn-secondary">
+                        <i class="fas fa-folder-open"></i>
+                        Carica File
+                    </button>
+                    <input type="file" id="fileInput" accept=".txt,.doc,.docx,.pdf" class="file-input">
+                    <button id="clearTextBtn" class="btn-secondary">
+                        <i class="fas fa-trash"></i>
+                        Cancella
+                    </button>
+                    
+                    <div class="text-stats">
+                        <span class="stat">
+                            <i class="fas fa-font"></i>
+                            <span id="charCount">0</span> caratteri
+                        </span>
+                        <span class="stat">
+                            <i class="fas fa-file-word"></i>
+                            <span id="wordCount">0</span> parole
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Selezione Voce -->
+        <section class="voice-selection-section">
+            <div class="section-header">
+                <h2><i class="fas fa-microphone"></i> Selezione Voce</h2>
+            </div>
+            <div class="voice-controls">
+                <div class="voice-selector">
+                    <label for="voiceSelect">Scegli una voce:</label>
+                    <select id="voiceSelect">
+                        <option value="">Caricamento voci ElevenLabs...</option>
+                    </select>
+                </div>
+
+                <div class="current-voice-display">
+                    <div class="voice-info">
+                        <h4 id="currentVoiceName">Caricamento voci in corso...</h4>
+                        <p id="currentVoiceDescription">Attendere il caricamento delle voci da ElevenLabs</p>
+                    </div>
+                </div>
+
+                <div class="voice-test">
+                    <button id="testVoiceBtn" class="btn-secondary">
+                        <i class="fas fa-play"></i>
+                        Test Anteprima Voce
+                    </button>
+                    <div class="test-status" id="testStatus"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Correzione Voce -->
+        <section class="voice-correction-section">
+            <div class="section-header">
+                <h2><i class="fas fa-sliders-h"></i> Impostazioni Voce</h2>
+            </div>
+            <div class="correction-controls">
+                <div class="control-group">
+                    <label for="pitchSlider">
+                        <i class="fas fa-waveform"></i>
+                        Tono (Pitch)
+                    </label>
+                    <input type="range" id="pitchSlider" min="-12" max="12" step="1" value="0">
+                    <span class="control-value" id="pitchValue">0 st</span>
+                </div>
+
+                <div class="control-group">
+                    <label for="volumeSlider">
+                        <i class="fas fa-volume-up"></i>
+                        Volume
+                    </label>
+                    <input type="range" id="volumeSlider" min="0" max="100" step="1" value="80">
+                    <span class="control-value" id="volumeValue">80%</span>
+                </div>
+
+                <div class="control-group">
+                    <label for="speedSlider">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Velocità
+                    </label>
+                    <input type="range" id="speedSlider" min="0.5" max="2.0" step="0.1" value="1.0">
+                    <span class="control-value" id="speedValue">1.0x</span>
+                </div>
+
+                <div class="control-actions">
+                    <button id="resetVoiceBtn" class="btn-secondary">
+                        <i class="fas fa-redo"></i>
+                        Reset Impostazioni
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigazione -->
+        <section class="navigation-section">
+            <div class="nav-actions">
+                <button id="nextBtn" class="btn-primary btn-large">
+                    <span>Avanti: Analisi Testo</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-status">
+                <div id="statusMessage" class="status"></div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Elemento Audio nascosto -->
+    <audio id="audioPlayer" style="display: none;"></audio>
+
+    <!-- Scripts -->
+    <script src="js/app-voice-selection.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 MetaVoices - Schermata 1: Selezione Voce');
+            
+            // Imposta la API Key fissa
+            const API_KEY = 'ab8e82ca509b4374dd192076affd9d4d14f76b093e2a52561cc2b8750d927253';
+            localStorage.setItem('elevenlabs_api_key', API_KEY);
+            console.log('✅ API Key ElevenLabs configurata');
+        });
+    </script>
+    
+    <!-- Navigation Script -->
+    <script>
+        // Navigazione a analysis.html
+        document.addEventListener('DOMContentLoaded', function() {
+            const nextBtn = document.getElementById('nextBtn');
+            if (nextBtn) {
+                nextBtn.addEventListener('click', function() {
+                    console.log('👉 Navigazione a analysis.html');
+                    
+                    // Salva i dati della voce selezionata
+                    const voiceSelect = document.getElementById('voiceSelect');
+                    const textInput = document.getElementById('mainTextInput');
+                    
+                    if (!voiceSelect || !voiceSelect.value) {
+                        alert('❌ Per favore, seleziona una voce prima di continuare.');
+                        return;
+                    }
+                    
+                    if (!textInput || !textInput.value.trim()) {
+                        alert('❌ Per favore, inserisci del testo prima di continuare.');
+                        return;
+                    }
+                    
+                    const voiceData = {
+                        voiceId: voiceSelect.value,
+                        voiceName: voiceSelect.options[voiceSelect.selectedIndex].text,
+                        text: textInput.value.trim(),
+                        pitch: document.getElementById('pitchSlider')?.value || 0,
+                        volume: document.getElementById('volumeSlider')?.value || 80,
+                        speed: document.getElementById('speedSlider')?.value || 1.0,
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    localStorage.setItem('metavoices_data', JSON.stringify(voiceData));
+                    window.location.href = 'analysis.html';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

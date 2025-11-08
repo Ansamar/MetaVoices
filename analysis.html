@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetaVoices - Analisi Testo</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Stili CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="assets/images/Metavoices.png" alt="MetaVoices" class="logo-image">
+                <h1>MetaVoices</h1>
+                <span class="version">v3.0</span>
+            </div>
+            <div class="header-actions">
+                <div class="progress-indicator">
+                    <span class="progress-step">1</span>
+                    <span class="progress-step active">2</span>
+                    <span class="progress-label">Analisi</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenuto principale -->
+    <main class="main-content vertical-flow">
+        <!-- Textarea Centrale con Highlight -->
+        <section class="text-section">
+            <div class="section-header">
+                <h2><i class="fas fa-edit"></i> Testo da Analizzare</h2>
+                <div class="text-actions">
+                    <button id="toggleHighlightBtn" class="btn-secondary">
+                        <i class="fas fa-highlighter"></i>
+                        <span id="highlightToggleText">Nascondi Highlight</span>
+                    </button>
+                </div>
+            </div>
+            <div class="text-container">
+                <div id="textDisplay" class="text-display">
+                    <!-- Il testo con highlight apparirà qui -->
+                </div>
+                
+                <div class="text-actions">
+                    <button id="analyzeBtn" class="btn-primary">
+                        <i class="fas fa-search"></i>
+                        Analizza Testo
+                    </button>
+                    
+                    <div class="text-stats">
+                        <span class="stat">
+                            <i class="fas fa-file-word"></i>
+                            <span id="wordCount">0</span> parole
+                        </span>
+                        <span class="stat">
+                            <i class="fas fa-clock"></i>
+                            <span id="readingTime">0</span> min
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analisi Automatica -->
+        <section class="analysis-section">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-bar"></i> Analisi Automatica</h2>
+                <div class="analysis-stats">
+                    <span class="stat-badge" id="ambiguitiesCount">0</span>
+                    <span>parole ambigue trovate</span>
+                </div>
+            </div>
+            
+            <div class="analysis-controls">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="autoCorrectToggle">
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-label">Correzione automatica</span>
+                </label>
+                
+                <button id="applyAllBtn" class="btn-secondary" disabled>
+                    <i class="fas fa-bolt"></i>
+                    Applica tutte le correzioni
+                </button>
+            </div>
+
+            <div id="ambiguitiesList" class="ambiguities-list">
+                <div class="empty-state">
+                    <i class="fas fa-search"></i>
+                    <h3>Nessuna analisi effettuata</h3>
+                    <p>Clicca "Analizza Testo" per iniziare l'analisi</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Suggerimenti -->
+        <section class="suggestions-section">
+            <div class="section-header">
+                <h2><i class="fas fa-lightbulb"></i> Suggerimenti di Correzione</h2>
+            </div>
+            
+            <div id="suggestionsList" class="suggestions-list">
+                <div class="empty-state">
+                    <i class="fas fa-lightbulb"></i>
+                    <h3>Nessun suggerimento disponibile</h3>
+                    <p>I suggerimenti appariranno qui dopo l'analisi</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navigazione -->
+        <section class="navigation-section">
+            <div class="nav-actions">
+                <button id="backBtn" class="btn-secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    Indietro
+                </button>
+                <button id="nextBtn" class="btn-primary btn-large">
+                    <span>Avanti: Controlli SSML</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-status">
+                <div id="statusMessage" class="status"></div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/ambiguous-words-loader.js"></script>
+    <script src="js/text-analysis.js"></script>
+    <script src="js/app-analysis.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 MetaVoices - Schermata 2: Analisi Testo');
+        });
+    </script>
+    
+    <!-- Navigation Script -->
+    <script>
+        // NAVIGAZIONE ANALYSIS -> SSML
+        document.addEventListener('DOMContentLoaded', function() {
+            const nextBtn = document.getElementById('nextBtn');
+            if (nextBtn) {
+                nextBtn.addEventListener('click', function() {
+                    console.log('👉 Navigazione a ssml.html');
+                    window.location.href = 'ssml.html';
+                });
+            }
+            
+            const backBtn = document.getElementById('backBtn');
+            if (backBtn) {
+                backBtn.addEventListener('click', function() {
+                    console.log('⬅️ Navigazione a index.html');
+                    window.location.href = 'index.html';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

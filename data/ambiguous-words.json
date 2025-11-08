@@ -1,0 +1,562 @@
+{
+  "ancora": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: oggetto marino", "avverbio: di nuovo"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: oggetto marino", 
+        "correction": "àncora",
+        "example": "L'àncora della nave era molto pesante."
+      },
+      { 
+        "context": "avverbio: di nuovo", 
+        "correction": "ancóra",
+        "example": "Devi ripeterlo ancóra una volta."
+      }
+    ]
+  },
+  "papa": {
+    "type": "accentazione",
+    "meanings": ["titolo ecclesiastico", "genitore maschio"],
+    "suggestions": [
+      { 
+        "context": "titolo ecclesiastico", 
+        "correction": "pàpa",
+        "example": "Il pàpa ha visitato la città."
+      },
+      { 
+        "context": "genitore maschio", 
+        "correction": "papà",
+        "example": "Mio papà è molto forte."
+      }
+    ]
+  },
+  "principi": {
+    "type": "accentazione",
+    "meanings": ["plurale di principe", "plurale di principio"],
+    "suggestions": [
+      { 
+        "context": "plurale di principe", 
+        "correction": "prìncipi",
+        "example": "I prìncipi vivono nei castelli."
+      },
+      { 
+        "context": "plurale di principio", 
+        "correction": "princìpi",
+        "example": "I princìpi della fisica sono importanti."
+      }
+    ]
+  },
+  "legge": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: norma giuridica", "verbo: terza persona di leggere"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: norma giuridica", 
+        "correction": "lègge",
+        "example": "La lègge va rispettata da tutti."
+      },
+      { 
+        "context": "verbo: terza persona di leggere", 
+        "correction": "légge",
+        "example": "Lui légge un libro ogni settimana."
+      }
+    ]
+  },
+  "colto": {
+    "type": "accentazione",
+    "meanings": ["participio passato di cogliere", "aggettivo: istruito"],
+    "suggestions": [
+      { 
+        "context": "participio passato di cogliere", 
+        "correction": "còlto",
+        "example": "Il frutto è stato còlto dall'albero."
+      },
+      { 
+        "context": "aggettivo: istruito", 
+        "correction": "cólto",
+        "example": "È una persona molto cólta e intelligente."
+      }
+    ]
+  },
+  "subito": {
+    "type": "accentazione",
+    "meanings": ["avverbio: immediatamente", "participio passato di subire"],
+    "suggestions": [
+      { 
+        "context": "avverbio: immediatamente", 
+        "correction": "sùbito",
+        "example": "Vieni qui sùbito!"
+      },
+      { 
+        "context": "participio passato di subire", 
+        "correction": "subìto",
+        "example": "Ha subìto un'ingiustizia."
+      }
+    ]
+  },
+  "pesca": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: frutto", "sostantivo: attività sportiva"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: frutto", 
+        "correction": "pèsca",
+        "example": "Ho mangiato una pèsca matura."
+      },
+      { 
+        "context": "sostantivo: attività sportiva", 
+        "correction": "pésca",
+        "example": "Mi piace andare a pésca la domenica."
+      }
+    ]
+  },
+  "meta": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: obiettivo", "sostantivo: metà (numero)"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: obiettivo", 
+        "correction": "mèta",
+        "example": "La mèta del viaggio era Roma."
+      },
+      { 
+        "context": "sostantivo: metà (numero)", 
+        "correction": "metà",
+        "example": "Solo metà degli studenti era presente."
+      }
+    ]
+  },
+  "compito": {
+    "type": "accentazione",
+    "meanings": ["aggettivo: educato", "sostantivo: incarico"],
+    "suggestions": [
+      { 
+        "context": "aggettivo: educato", 
+        "correction": "còmpito",
+        "example": "Il bambino era molto còmpito."
+      },
+      { 
+        "context": "sostantivo: incarico", 
+        "correction": "compìto",
+        "example": "Devo svolgere questo compìto per domani."
+      }
+    ]
+  },
+  "capito": {
+    "type": "accentazione",
+    "meanings": ["verbo: da capitare", "participio passato di capire"],
+    "suggestions": [
+      { 
+        "context": "verbo: da capitare", 
+        "correction": "càpito",
+        "example": "Mi càpito spesso di vederlo."
+      },
+      { 
+        "context": "participio passato di capire", 
+        "correction": "capìto",
+        "example": "Non ho capìto la spiegazione."
+      }
+    ]
+  },
+  "affetto": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: sentimento", "verbo: da affettare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: sentimento", 
+        "correction": "affètto",
+        "example": "Provo molto affètto per te."
+      },
+      { 
+        "context": "verbo: da affettare", 
+        "correction": "affétto",
+        "example": "Lui affétto il pane per la colazione."
+      }
+    ]
+  },
+  "verso": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: poesia", "verbo: da versare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: poesia", 
+        "correction": "vèrso",
+        "example": "Questo vèrso è molto bello."
+      },
+      { 
+        "context": "verbo: da versare", 
+        "correction": "versò",
+        "example": "Lui versò il vino nei bicchieri."
+      }
+    ]
+  },
+  "rubrica": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: agenda", "sostantivo: categoria"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: agenda", 
+        "correction": "rùbrica",
+        "example": "Ho scritto il numero nella rùbrica."
+      },
+      { 
+        "context": "sostantivo: categoria", 
+        "correction": "rubrìca",
+        "example": "Questo articolo appartiene alla rubrìca sport."
+      }
+    ]
+  },
+  "mani": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: parti del corpo", "verbo: da manire"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: parti del corpo", 
+        "correction": "màni",
+        "example": "Le màni sono importanti per lavorare."
+      },
+      { 
+        "context": "verbo: da manire", 
+        "correction": "manì",
+        "example": "Lui manì gli attrezzi con cura."
+      }
+    ]
+  },
+  "canto": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: musica", "verbo: da cantare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: musica", 
+        "correction": "cànto",
+        "example": "Il cànto degli uccelli è melodioso."
+      },
+      { 
+        "context": "verbo: da cantare", 
+        "correction": "cantò",
+        "example": "Lui cantò una canzone bellissima."
+      }
+    ]
+  },
+  "parlo": {
+    "type": "accentazione",
+    "meanings": ["verbo: presente", "verbo: passato"],
+    "suggestions": [
+      { 
+        "context": "verbo: presente", 
+        "correction": "pàrlo",
+        "example": "Io pàrlo italiano e inglese."
+      },
+      { 
+        "context": "verbo: passato", 
+        "correction": "parlò",
+        "example": "Lui parlò per ore alla conferenza."
+      }
+    ]
+  },
+  "credo": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: fede", "verbo: da credere"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: fede", 
+        "correction": "crèdo",
+        "example": "Il crèdo religioso è importante."
+      },
+      { 
+        "context": "verbo: da credere", 
+        "correction": "credò",
+        "example": "Lui credò alle mie parole."
+      }
+    ]
+  },
+  "mangio": {
+    "type": "accentazione",
+    "meanings": ["verbo: presente", "verbo: passato"],
+    "suggestions": [
+      { 
+        "context": "verbo: presente", 
+        "correction": "màngio",
+        "example": "Io màngio la mela ogni giorno."
+      },
+      { 
+        "context": "verbo: passato", 
+        "correction": "mangiò",
+        "example": "Lui mangiò tutto il dolce."
+      }
+    ]
+  },
+  "volto": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: faccia", "verbo: da volgere"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: faccia", 
+        "correction": "vòlto",
+        "example": "Il suo vòlto era sereno."
+      },
+      { 
+        "context": "verbo: da volgere", 
+        "correction": "voltò",
+        "example": "Lui voltò la pagina del libro."
+      }
+    ]
+  },
+  "torto": {
+    "type": "accentazione",
+    "meanings": ["aggettivo: storto", "verbo: da torcere"],
+    "suggestions": [
+      { 
+        "context": "aggettivo: storto", 
+        "correction": "tòrto",
+        "example": "Il chiodo era tòrto."
+      },
+      { 
+        "context": "verbo: da torcere", 
+        "correction": "tortò",
+        "example": "Lui tortò il filo di ferro."
+      }
+    ]
+  },
+  "capito_forma": {
+    "type": "accentazione",
+    "meanings": ["verbo: passato", "verbo: presente"],
+    "suggestions": [
+      { 
+        "context": "verbo: passato", 
+        "correction": "càpitò",
+        "example": "Gli càpitò un incidente."
+      },
+      { 
+        "context": "verbo: presente", 
+        "correction": "càpito",
+        "example": "Mi càpito spesso di sbagliare."
+      }
+    ]
+  },
+  "principio": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: inizio", "sostantivo: regola"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: inizio", 
+        "correction": "princìpio",
+        "example": "Il princìpio della storia è avvincente."
+      },
+      { 
+        "context": "sostantivo: regola", 
+        "correction": "prìncipio",
+        "example": "Il prìncipio di Archimede è famoso."
+      }
+    ]
+  },
+  "spirito": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: anima", "verbo: da spirare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: anima", 
+        "correction": "spìrito",
+        "example": "Lo spìrito umano è forte."
+      },
+      { 
+        "context": "verbo: da spirare", 
+        "correction": "spirò",
+        "example": "Il ferito spirò all'ospedale."
+      }
+    ]
+  },
+  "predica": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: sermone", "verbo: da predicare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: sermone", 
+        "correction": "prèdica",
+        "example": "La prèdica del sacerdote era commovente."
+      },
+      { 
+        "context": "verbo: da predicare", 
+        "correction": "predìca",
+        "example": "Lui predìca il Vangelo."
+      }
+    ]
+  },
+  "anima": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: spirito", "verbo: da animare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: spirito", 
+        "correction": "ànima",
+        "example": "L'ànima è immortale."
+      },
+      { 
+        "context": "verbo: da animare", 
+        "correction": "anìma",
+        "example": "Lui anìma la festa con la sua allegria."
+      }
+    ]
+  },
+  "regno": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: territorio", "verbo: da regnare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: territorio", 
+        "correction": "régno",
+        "example": "Il régno di Francia era vasto."
+      },
+      { 
+        "context": "verbo: da regnare", 
+        "correction": "regnò",
+        "example": "Il re regnò per cinquant'anni."
+      }
+    ]
+  },
+  "eserciti": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: forze armate", "verbo: da esercitare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: forze armate", 
+        "correction": "esèrciti",
+        "example": "Gli esèrciti si scontrarono in battaglia."
+      },
+      { 
+        "context": "verbo: da esercitare", 
+        "correction": "esercìti",
+        "example": "Lui esercìti la professione con passione."
+      }
+    ]
+  },
+  "deserto": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: zona arida", "verbo: da desertare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: zona arida", 
+        "correction": "desèrto",
+        "example": "Il desèrto del Sahara è immenso."
+      },
+      { 
+        "context": "verbo: da desertare", 
+        "correction": "desertò",
+        "example": "Il soldato desertò dall'esercito."
+      }
+    ]
+  },
+  "calice": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: coppa", "sostantivo: parte del fiore"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: coppa", 
+        "correction": "càlice",
+        "example": "Il càlice per il vino era di cristallo."
+      },
+      { 
+        "context": "sostantivo: parte del fiore", 
+        "correction": "calíce",
+        "example": "Il calíce del fiore è verde."
+      }
+    ]
+  },
+  "passo": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: movimento", "verbo: da passare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: movimento", 
+        "correction": "pàsso",
+        "example": "Il pàsso successivo è importante."
+      },
+      { 
+        "context": "verbo: da passare", 
+        "correction": "passò",
+        "example": "Lui passò davanti alla casa."
+      }
+    ]
+  },
+  "porto": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: luogo navale", "verbo: da portare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: luogo navale", 
+        "correction": "pòrto",
+        "example": "Il pòrto di Genova è grande."
+      },
+      { 
+        "context": "verbo: da portare", 
+        "correction": "portò",
+        "example": "Lui portò i bagagli in camera."
+      }
+    ]
+  },
+  "giudico": {
+    "type": "accentazione",
+    "meanings": ["verbo: presente", "verbo: passato"],
+    "suggestions": [
+      { 
+        "context": "verbo: presente", 
+        "correction": "giùdico",
+        "example": "Io giùdico le situazioni con calma."
+      },
+      { 
+        "context": "verbo: passato", 
+        "correction": "giudicò",
+        "example": "Il tribunale giudicò l'imputato."
+      }
+    ]
+  },
+  "lavo": {
+    "type": "accentazione",
+    "meanings": ["verbo: presente", "verbo: passato"],
+    "suggestions": [
+      { 
+        "context": "verbo: presente", 
+        "correction": "làvo",
+        "example": "Io làvo i piatti dopo cena."
+      },
+      { 
+        "context": "verbo: passato", 
+        "correction": "lavò",
+        "example": "Lui lavò la macchina ieri."
+      }
+    ]
+  },
+  "libro": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: volume", "verbo: da librare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: volume", 
+        "correction": "lìbro",
+        "example": "Questo lìbro è molto interessante."
+      },
+      { 
+        "context": "verbo: da librare", 
+        "correction": "librò",
+        "example": "L'aquila si librò nel cielo."
+      }
+    ]
+  },
+  "salmi": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: preghiere", "verbo: da salmare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: preghiere", 
+        "correction": "sàlmi",
+        "example": "I sàlmi sono testi religiosi."
+      },
+      { 
+        "context": "verbo: da salmare", 
+        "correction": "salmì",
+        "example": "Lui salmì il pesce per conservarlo."
+      }
+    ]
+  }
+}
