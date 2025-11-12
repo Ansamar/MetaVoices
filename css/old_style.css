@@ -75,12 +75,6 @@ body {
 }
 
 /* ===== LAYOUT PRINCIPALE ===== */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: var(--space-xl);
-}
-
 .main-content {
     max-width: 1200px;
     margin: 0 auto;
@@ -120,7 +114,7 @@ body {
 }
 
 .logo-image {
-    height: 80px;
+    height: 40px;
     width: auto;
 }
 

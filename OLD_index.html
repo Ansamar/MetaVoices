@@ -28,8 +28,8 @@
                     <span class="progress-step">3</span>
                     <div class="progress-labels">
                         <span class="progress-label">Voce</span>
+                        <span class="progress-label">Analisi</span>
                         <span class="progress-label">SSML</span>
-                        <span class="progress-label">Anteprima</span>
                     </div>
                 </div>
             </div>
@@ -151,7 +151,7 @@
         <section class="navigation-section">
             <div class="nav-actions">
                 <button id="nextBtn" class="btn-primary btn-large">
-                    <span>Avanti: Controlli SSML</span>
+                    <span>Avanti: Analisi Testo</span>
                     <i class="fas fa-arrow-right"></i>
                 </button>
             </div>
@@ -213,10 +213,10 @@
             }
 
             setupEventListeners() {
-                // Text area events
+                // Text area events - MODIFICATO: aggiunto salvataggio automatico
                 this.elements.mainTextInput.addEventListener('input', () => {
                     this.updateCounters();
-                    this.saveTextToLocalStorage();
+                    this.saveTextToLocalStorage(); // NUOVO: salva testo in tempo reale
                 });
                 this.elements.loadFileBtn.addEventListener('click', () => this.elements.fileInput.click());
                 this.elements.fileInput.addEventListener('change', (e) => this.handleFileUpload(e));
@@ -233,7 +233,7 @@
                 this.elements.resetVoiceBtn.addEventListener('click', () => this.resetVoiceSettings());
 
                 // Navigation
-                this.elements.nextBtn.addEventListener('click', () => this.goToSSML());
+                this.elements.nextBtn.addEventListener('click', () => this.goToAnalysis());
             }
 
             loadSavedData() {
@@ -246,7 +246,7 @@
                 // Carica voci
                 this.loadVoices();
 
-                // Carica testo salvato
+                // Carica testo salvato - MODIFICATO: usa la chiave unificata
                 const savedText = localStorage.getItem('metavoices_text_input');
                 if (savedText) {
                     this.elements.mainTextInput.value = savedText;
@@ -254,7 +254,7 @@
                 }
             }
 
-            // Salva il testo in localStorage
+            // NUOVO METODO: Salva il testo in localStorage
             saveTextToLocalStorage() {
                 const text = this.elements.mainTextInput.value;
                 localStorage.setItem('metavoices_text_input', text);
@@ -419,7 +419,7 @@
             clearText() {
                 this.elements.mainTextInput.value = '';
                 this.updateCounters();
-                localStorage.removeItem('metavoices_text_input');
+                localStorage.removeItem('metavoices_text_input'); // MODIFICATO: rimuove anche dal localStorage
                 this.showStatus('Testo cancellato', 'success');
             }
 
@@ -431,7 +431,7 @@
                 reader.onload = (e) => {
                     this.elements.mainTextInput.value = e.target.result;
                     this.updateCounters();
-                    this.saveTextToLocalStorage();
+                    this.saveTextToLocalStorage(); // NUOVO: salva il testo caricato
                     this.showStatus('File caricato con successo', 'success');
                 };
                 reader.onerror = () => {
@@ -440,7 +440,7 @@
                 reader.readAsText(file);
             }
 
-            goToSSML() {
+            goToAnalysis() {
                 const text = this.elements.mainTextInput.value.trim();
                 
                 console.log('🔍 DEBUG - Testo inserito:', text);
@@ -465,36 +465,45 @@
                     timestamp: new Date().toISOString()
                 };
 
+                const analysisData = {
+                    text: text,
+                    originalText: text,
+                    processedText: text,
+                    timestamp: new Date().toISOString()
+                };
+
                 console.log('💾 Dati voce da salvare:', voiceData);
+                console.log('💾 Dati analisi da salvare:', analysisData);
 
                 // SALVA NEL LOCALSTORAGE
                 try {
-                    // Salva i dati voce
-                    localStorage.setItem('metavoices_data', JSON.stringify(voiceData));
+                    // Pulisci prima il localStorage
+                    localStorage.removeItem('metavoices_data');
+                    localStorage.removeItem('metavoices_analysis_data');
                     
-                    // SALVA IL TESTO CON LA CHIAVE CORRETTA PER SSML
-                    localStorage.setItem('Testo per Controlli SSML', text);
-                    localStorage.setItem('metavoices_text_input', text);
+                    // Salva i nuovi dati
+                    localStorage.setItem('metavoices_data', JSON.stringify(voiceData));
+                    localStorage.setItem('metavoices_analysis_data', JSON.stringify(analysisData));
+                    localStorage.setItem('metavoices_text_input', text); // NUOVO: salva anche qui per sicurezza
                     
                     console.log('✅ Dati salvati nel localStorage');
-                    console.log('✅ Testo salvato con chiave "Testo per Controlli SSML":', text.substring(0, 50) + '...');
                     
                     // VERIFICA IMMEDIATA che i dati siano stati salvati
                     const savedVoice = localStorage.getItem('metavoices_data');
-                    const savedText = localStorage.getItem('Testo per Controlli SSML');
+                    const savedAnalysis = localStorage.getItem('metavoices_analysis_data');
                     
                     console.log('🔍 Verifica voce salvata:', savedVoice);
-                    console.log('🔍 Verifica testo SSML salvato:', savedText);
+                    console.log('🔍 Verifica analisi salvata:', savedAnalysis);
                     
-                    if (!savedVoice || !savedText) {
+                    if (!savedVoice || !savedAnalysis) {
                         throw new Error('Dati non salvati correttamente');
                     }
                     
-                    this.showStatus('✅ Dati salvati, redirect a SSML...', 'success');
+                    this.showStatus('✅ Dati salvati, redirect in corso...', 'success');
                     
-                    // Redirect a SSML.html
+                    // Redirect immediato
                     setTimeout(() => {
-                        window.location.href = 'ssml.html';
+                        window.location.href = 'analysis.html';
                     }, 500);
                     
                 } catch (error) {

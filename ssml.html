@@ -3,255 +3,561 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MetaVoices - Controlli SSML</title>
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Stili CSS -->
-    <link rel="stylesheet" href="css/style.css">
+    <title>Controlli SSML - Tema Scuro</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #121212;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #1e1e1e;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #bb86fc;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+        .text-area {
+            width: 100%;
+            height: 200px;
+            padding: 15px;
+            border: 1px solid #333;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            font-size: 16px;
+            line-height: 1.5;
+            resize: vertical;
+            background-color: #2d2d2d;
+            color: #e0e0e0;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .text-area:focus {
+            outline: none;
+            border-color: #bb86fc;
+            box-shadow: 0 0 0 2px rgba(187, 134, 252, 0.2);
+        }
+        .controls-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+        .control-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        .control-group h2 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: #bb86fc;
+            font-weight: 500;
+        }
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #333;
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: #2d2d2d;
+            color: #e0e0e0;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        select:focus {
+            outline: none;
+            border-color: #bb86fc;
+            box-shadow: 0 0 0 2px rgba(187, 134, 252, 0.2);
+        }
+        .buttons-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .apply-btn {
+            background-color: #03dac6;
+            color: #121212;
+        }
+        .apply-btn:hover {
+            background-color: #00c4b4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(3, 218, 198, 0.3);
+        }
+        .play-btn {
+            background-color: #bb86fc;
+            color: #121212;
+        }
+        .play-btn:hover {
+            background-color: #a970f5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(187, 134, 252, 0.3);
+        }
+        .stop-btn {
+            background-color: #ff5252;
+            color: #121212;
+            display: none;
+        }
+        .stop-btn:hover {
+            background-color: #ff4444;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255, 82, 82, 0.3);
+        }
+        .next-btn {
+            background-color: #cf6679;
+            color: #121212;
+        }
+        .next-btn:hover {
+            background-color: #c1556a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(207, 102, 121, 0.3);
+        }
+        .info-text {
+            text-align: center;
+            color: #9e9e9e;
+            margin-top: 15px;
+            font-style: italic;
+            font-size: 14px;
+        }
+        .selection-info {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #2d2d2d;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #03dac6;
+            display: none;
+        }
+        .highlight {
+            background-color: rgba(187, 134, 252, 0.3);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .ssml-tag {
+            color: #03dac6;
+            font-weight: bold;
+        }
+        .playback-status {
+            text-align: center;
+            margin-top: 10px;
+            color: #bb86fc;
+            font-size: 14px;
+            display: none;
+        }
+        .text-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #9e9e9e;
+        }
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        @media (max-width: 768px) {
+            .controls-container {
+                flex-direction: column;
+            }
+            .buttons-container {
+                flex-direction: column;
+            }
+            button {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="header-content">
-            <div class="logo">
-                <img src="assets/images/Metavoices.png" alt="MetaVoices" class="logo-image">
-                <h1>MetaVoices</h1>
-                <span class="version">v3.0</span>
-            </div>
-            <div class="header-actions">
-                <div class="progress-indicator">
-                    <span class="progress-step">1</span>
-                    <span class="progress-step">2</span>
-                    <span class="progress-step active">3</span>
-                    <span class="progress-label">SSML</span>
+    <div class="container">
+        <h1>Controlli SSML</h1>
+        
+        <div>
+            <label for="textArea">Testo per Controlli SSML:</label>
+            <textarea id="textArea" class="text-area" readonly></textarea>
+            <div class="text-stats">
+                <div class="stat-item">
+                    <span id="charCount">0</span> caratteri
+                </div>
+                <div class="stat-item">
+                    <span id="ssmlTagsCount">0</span> tag SSML
                 </div>
             </div>
         </div>
-    </header>
-
-    <!-- Contenuto principale -->
-    <main class="main-content vertical-flow">
-        <!-- Textarea Centrale con Highlight SSML -->
-        <section class="text-section">
-            <div class="section-header">
-                <h2><i class="fas fa-edit"></i> Testo con Controlli SSML</h2>
-                <div class="text-actions">
-                    <button id="clearSSMLBtn" class="btn-secondary">
-                        <i class="fas fa-times"></i>
-                        Rimuovi SSML
-                    </button>
-                </div>
-            </div>
-            <div class="text-container">
-                <div id="textDisplay" class="text-display">
-                    <!-- Il testo con highlight SSML apparirà qui -->
-                </div>
-                
-                <div class="text-stats">
-                    <span class="stat">
-                        <i class="fas fa-file-word"></i>
-                        <span id="wordCount">0</span> parole
-                    </span>
-                    <span class="stat">
-                        <i class="fas fa-code"></i>
-                        <span id="ssmlCount">0</span> controlli SSML
-                    </span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Controlli SSML -->
-        <section class="ssml-controls-section">
-            <div class="section-header">
-                <h2><i class="fas fa-sliders-h"></i> Controlli SSML</h2>
+        
+        <div class="controls-container">
+            <div class="control-group">
+                <h2>Controlli SSML</h2>
+                <select id="ssmlControls">
+                    <option value="" disabled selected>Seleziona un controllo SSML</option>
+                    <option value="break">Pausa (break)</option>
+                    <option value="emphasis">Enfasi (emphasis)</option>
+                    <option value="prosody">Prosodia (prosody)</option>
+                    <option value="say-as">Pronuncia (say-as)</option>
+                    <option value="phoneme">Fonema (phoneme)</option>
+                </select>
             </div>
             
-            <div class="ssml-controls-grid">
-                <!-- Pause -->
-                <div class="ssml-control-group">
-                    <label for="pauseControl">
-                        <i class="fas fa-pause-circle"></i>
-                        Pause
-                    </label>
-                    <select id="pauseControl">
-                        <option value="">Nessuna pausa</option>
-                        <option value="0.3s">Pausa breve (0.3s)</option>
-                        <option value="0.5s">Pausa media (0.5s)</option>
-                        <option value="1s">Pausa lunga (1s)</option>
-                        <option value="2s">Pausa molto lunga (2s)</option>
-                    </select>
-                </div>
-
-                <!-- Enfasi -->
-                <div class="ssml-control-group">
-                    <label for="emphasisControl">
-                        <i class="fas fa-volume-up"></i>
-                        Enfasi
-                    </label>
-                    <select id="emphasisControl">
-                        <option value="">Nessuna enfasi</option>
-                        <option value="strong">Enfasi forte</option>
-                        <option value="moderate">Enfasi moderata</option>
-                        <option value="reduced">Enfasi ridotta</option>
-                    </select>
-                </div>
-
-                <!-- Velocità -->
-                <div class="ssml-control-group">
-                    <label for="rateControl">
-                        <i class="fas fa-tachometer-alt"></i>
-                        Velocità
-                    </label>
-                    <select id="rateControl">
-                        <option value="1.0">Normale (1.0x)</option>
-                        <option value="0.5">Molto lento (0.5x)</option>
-                        <option value="0.7">Lento (0.7x)</option>
-                        <option value="1.3">Veloce (1.3x)</option>
-                        <option value="1.5">Molto veloce (1.5x)</option>
-                    </select>
-                </div>
-
-                <!-- Volume -->
-                <div class="ssml-control-group">
-                    <label for="volumeControl">
-                        <i class="fas fa-waveform"></i>
-                        Volume
-                    </label>
-                    <select id="volumeControl">
-                        <option value="1.0">Normale</option>
-                        <option value="0.0">Silenzioso</option>
-                        <option value="0.5">Basso</option>
-                        <option value="1.5">Alto</option>
-                        <option value="2.0">Molto alto</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="ssml-actions">
-                <button id="applySSMLBtn" class="btn-primary">
-                    <i class="fas fa-check"></i>
-                    Applica Controlli SSML
-                </button>
-                <button id="testSSMLBtn" class="btn-secondary">
-                    <i class="fas fa-play"></i>
-                    Test SSML
-                </button>
-            </div>
-        </section>
-
-        <!-- Preset Rapidi -->
-        <section class="presets-section">
-            <div class="section-header">
-                <h2><i class="fas fa-magic"></i> Preset Rapidi</h2>
-            </div>
-            
-            <div class="presets-grid">
-                <button class="preset-btn" data-preset="news">
-                    <i class="fas fa-newspaper"></i>
-                    <span>Notiziario</span>
-                    <small>Pause brevi, ritmo regolare</small>
-                </button>
-                
-                <button class="preset-btn" data-preset="storytelling">
-                    <i class="fas fa-book"></i>
-                    <span>Narrativa</span>
-                    <small>Pause lunghe, enfasi drammatica</small>
-                </button>
-                
-                <button class="preset-btn" data-preset="presentation">
-                    <i class="fas fa-presentation"></i>
-                    <span>Presentazione</span>
-                    <small>Ritmo vivace, enfasi chiara</small>
-                </button>
-                
-                <button class="preset-btn" data-preset="accessibility">
-                    <i class="fas fa-universal-access"></i>
-                    <span>Accessibilità</span>
-                    <small>Lento e chiaro</small>
-                </button>
-            </div>
-        </section>
-
-        <!-- Anteprima SSML -->
-        <section class="preview-section">
-            <div class="section-header">
-                <h2><i class="fas fa-eye"></i> Anteprima SSML</h2>
-                <div class="preview-actions">
-                    <button id="copySSMLBtn" class="btn-secondary">
-                        <i class="fas fa-copy"></i>
-                        Copia SSML
-                    </button>
-                </div>
-            </div>
-            
-            <div class="preview-container">
-                <div id="ssmlPreview" class="ssml-preview">
-                    <!-- Il codice SSML apparirà qui -->
-                </div>
-                <div class="preview-info">
-                    <i class="fas fa-info-circle"></i>
-                    <span>Il codice SSML verrà generato automaticamente quando applichi i controlli</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Navigazione -->
-        <section class="navigation-section">
-            <div class="nav-actions">
-                <button id="backBtn" class="btn-secondary">
-                    <i class="fas fa-arrow-left"></i>
-                    Indietro
-                </button>
-                <button id="nextBtn" class="btn-primary btn-large">
-                    <span>Avanti: Anteprima Finale</span>
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-status">
-                <div id="statusMessage" class="status"></div>
+            <div class="control-group">
+                <h2>Preset Rapidi</h2>
+                <select id="presetControls">
+                    <option value="" disabled selected>Seleziona un preset</option>
+                    <option value="pause-short">Pausa breve (1s)</option>
+                    <option value="pause-medium">Pausa media (2s)</option>
+                    <option value="emphasis-strong">Enfasi forte</option>
+                    <option value="emphasis-moderate">Enfasi moderata</option>
+                    <option value="slow-speech">Parlata lenta</option>
+                </select>
             </div>
         </div>
-    </footer>
-
-    <!-- Elemento Audio nascosto -->
-    <audio id="audioPlayer" style="display: none;"></audio>
-
-    <!-- Scripts -->
-    <script src="js/app-ssml.js"></script>
+        
+        <div class="buttons-container">
+            <button id="applyFilter" class="apply-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3Z" stroke="#121212" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 12H15" stroke="#121212" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 9V15" stroke="#121212" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Applica Filtro
+            </button>
+            <button id="playText" class="play-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 5V19L19 12L8 5Z" fill="#121212" stroke="#121212" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Riproduci
+            </button>
+            <button id="stopPlayback" class="stop-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 6H18V18H6V6Z" fill="#121212" stroke="#121212" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Ferma
+            </button>
+            <button id="nextPage" class="next-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 12H19" stroke="#121212" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 5L19 12L12 19" stroke="#121212" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Anteprima
+            </button>
+        </div>
+        
+        <div id="playbackStatus" class="playback-status"></div>
+        
+        <p class="info-text">Seleziona una parte del testo e applica un filtro SSML</p>
+        
+        <!-- Indicatore di testo selezionato -->
+        <div id="selectionInfo" class="selection-info"></div>
+    </div>
 
     <script>
+        // Variabili globali per memorizzare la selezione
+        let selectedText = '';
+        let selectionStart = 0;
+        let selectionEnd = 0;
+        let synthesis = null;
+        let isPlaying = false;
+
+        // Carica il testo dal localStorage
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 MetaVoices - Schermata 3: Controlli SSML');
+            const textArea = document.getElementById('textArea');
+            const storedText = localStorage.getItem('Testo per Controlli SSML');
+            
+            if (storedText) {
+                textArea.value = storedText;
+            } else {
+                textArea.value = "Nessun testo disponibile. Torna alla pagina precedente per inserire il testo.";
+            }
+            
+            // Inizializza la sintesi vocale
+            initSpeechSynthesis();
+            
+            // Gestisce la selezione del testo
+            textArea.addEventListener('mouseup', handleTextSelection);
+            textArea.addEventListener('keyup', handleTextSelection);
+            
+            // Aggiorna i contatori iniziali
+            updateCounters();
         });
-    </script>
-    
-    <!-- Navigation Script -->
-    <script>
-        // NAVIGAZIONE SSML -> PREVIEW
-        document.addEventListener('DOMContentLoaded', function() {
-            const nextBtn = document.getElementById('nextBtn');
-            if (nextBtn) {
-                nextBtn.addEventListener('click', function() {
-                    console.log('👉 Navigazione a preview.html');
-                    window.location.href = 'preview.html';
-                });
+
+        // Inizializza la sintesi vocale
+        function initSpeechSynthesis() {
+            if ('speechSynthesis' in window) {
+                synthesis = window.speechSynthesis;
+                
+                // Aggiorna l'interfaccia per mostrare che la sintesi vocale è disponibile
+                document.getElementById('playText').disabled = false;
+            } else {
+                // Sintesi vocale non supportata
+                document.getElementById('playText').disabled = true;
+                document.getElementById('playText').style.backgroundColor = '#666';
+                document.getElementById('playText').innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 9V11M12 15H12.01M5 7.8C5 6.11984 5 5.27976 5.32698 4.63803C5.6146 4.07354 6.07354 3.6146 6.63803 3.32698C7.27976 3 8.11984 3 9.8 3H14.2C15.8802 3 16.7202 3 17.362 3.32698C17.9265 3.6146 18.3854 4.07354 18.673 4.63803C19 5.27976 19 6.11984 19 7.8V16.2C19 17.8802 19 18.7202 18.673 19.362C18.3854 19.9265 17.9265 20.3854 17.362 20.673C16.7202 21 15.8802 21 14.2 21H9.8C8.11984 21 7.27976 21 6.63803 20.673C6.07354 20.3854 5.6146 19.9265 5.32698 19.362C5 18.7202 5 17.8802 5 16.2V7.8Z" stroke="#121212" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Sintesi non supportata';
+            }
+        }
+
+        // Gestisce la selezione del testo
+        function handleTextSelection() {
+            const textArea = document.getElementById('textArea');
+            const selectionInfo = document.getElementById('selectionInfo');
+            
+            selectionStart = textArea.selectionStart;
+            selectionEnd = textArea.selectionEnd;
+            
+            if (selectionStart !== selectionEnd) {
+                selectedText = textArea.value.substring(selectionStart, selectionEnd);
+                selectionInfo.textContent = `Testo selezionato: "${selectedText}"`;
+                selectionInfo.style.display = 'block';
+                
+                // Aggiungi evidenziazione visiva temporanea
+                textArea.focus();
+                textArea.setSelectionRange(selectionStart, selectionEnd);
+            } else {
+                selectedText = '';
+                selectionInfo.style.display = 'none';
+            }
+        }
+
+        // Mappa dei controlli SSML
+        const ssmlMap = {
+            'break': '<break time="500ms"/>',
+            'emphasis': '<emphasis level="moderate">SELECTED_TEXT</emphasis>',
+            'prosody': '<prosody rate="medium" pitch="medium">SELECTED_TEXT</prosody>',
+            'say-as': '<say-as interpret-as="characters">SELECTED_TEXT</say-as>',
+            'phoneme': '<phoneme alphabet="ipa" ph="SELECTED_TEXT">SELECTED_TEXT</phoneme>'
+        };
+
+        // Mappa dei preset rapidi
+        const presetMap = {
+            'pause-short': '<break time="1s"/>',
+            'pause-medium': '<break time="2s"/>',
+            'emphasis-strong': '<emphasis level="strong">SELECTED_TEXT</emphasis>',
+            'emphasis-moderate': '<emphasis level="moderate">SELECTED_TEXT</emphasis>',
+            'slow-speech': '<prosody rate="slow">SELECTED_TEXT</prosody>'
+        };
+
+        // Funzione per salvare il testo corretto
+        function saveCorrectedText() {
+            const textArea = document.getElementById('textArea');
+            const correctedText = textArea.value;
+            
+            // SALVA CON CHIAVE SPECIFICA PER TESTO CORRETTO
+            localStorage.setItem('TestoCorrettoSSML', correctedText);
+            
+            // Salva anche con le chiavi originali per compatibilità
+            localStorage.setItem('Testo per Controlli SSML', correctedText);
+            localStorage.setItem('metavoices_text_input', correctedText);
+            
+            console.log('💾 Testo corretto salvato:', correctedText.substring(0, 50) + '...');
+        }
+
+        // Aggiorna i contatori
+        function updateCounters() {
+            const textArea = document.getElementById('textArea');
+            const text = textArea.value;
+            const characters = text.length;
+            
+            // Conta i tag SSML approssimativamente
+            const ssmlTags = (text.match(/<[^>]+>/g) || []).length;
+            
+            document.getElementById('charCount').textContent = characters;
+            document.getElementById('ssmlTagsCount').textContent = ssmlTags;
+        }
+
+        // Applica il filtro selezionato
+        document.getElementById('applyFilter').addEventListener('click', function() {
+            const textArea = document.getElementById('textArea');
+            const selectionInfo = document.getElementById('selectionInfo');
+            
+            if (!selectedText) {
+                alert('Seleziona prima una parte del testo!');
+                return;
             }
             
-            const backBtn = document.getElementById('backBtn');
-            if (backBtn) {
-                backBtn.addEventListener('click', function() {
-                    console.log('⬅️ Navigazione a analysis.html');
-                    window.location.href = 'analysis.html';
-                });
+            let ssmlTag = '';
+            
+            // Controlla se è stato selezionato un controllo SSML
+            const ssmlControl = document.getElementById('ssmlControls').value;
+            if (ssmlControl) {
+                ssmlTag = ssmlMap[ssmlControl];
             }
+            
+            // Se non è stato selezionato un controllo SSML, controlla i preset
+            if (!ssmlTag) {
+                const presetControl = document.getElementById('presetControls').value;
+                if (presetControl) {
+                    ssmlTag = presetMap[presetControl];
+                }
+            }
+            
+            if (!ssmlTag) {
+                alert('Seleziona un controllo SSML o un preset rapido!');
+                return;
+            }
+            
+            // Sostituisce il testo selezionato con il tag SSML
+            const beforeText = textArea.value.substring(0, selectionStart);
+            const afterText = textArea.value.substring(selectionEnd);
+            const newText = ssmlTag.replace(/SELECTED_TEXT/g, selectedText);
+            
+            textArea.value = beforeText + newText + afterText;
+            
+            // SALVA IMMEDIATAMENTE IL TESTO CORRETTO
+            saveCorrectedText();
+            
+            // Aggiorna i contatori
+            updateCounters();
+            
+            // Reimposta la selezione
+            selectedText = '';
+            selectionInfo.style.display = 'none';
+            
+            // Reimposta i dropdown
+            document.getElementById('ssmlControls').selectedIndex = 0;
+            document.getElementById('presetControls').selectedIndex = 0;
+            
+            // Mostra conferma visiva
+            const applyButton = document.getElementById('applyFilter');
+            const originalText = applyButton.innerHTML;
+            applyButton.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17L4 12" stroke="#121212" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Filtro Applicato!';
+            applyButton.style.backgroundColor = '#00a896';
+            
+            setTimeout(() => {
+                applyButton.innerHTML = originalText;
+                applyButton.style.backgroundColor = '#03dac6';
+            }, 1500);
+        });
+
+        // Riproduci il testo con sintesi vocale
+        document.getElementById('playText').addEventListener('click', function() {
+            const textArea = document.getElementById('textArea');
+            const textToPlay = textArea.value;
+            
+            if (!synthesis) {
+                alert('La sintesi vocale non è supportata dal tuo browser. Prova con Chrome o Edge.');
+                return;
+            }
+            
+            if (textToPlay && textToPlay !== "Nessun testo disponibile. Torna alla pagina precedente per inserire il testo.") {
+                // Ferma eventuale riproduzione in corso
+                if (isPlaying) {
+                    synthesis.cancel();
+                }
+                
+                // Crea un nuovo oggetto SpeechSynthesisUtterance
+                const utterance = new SpeechSynthesisUtterance();
+                
+                // Imposta il testo da riprodurre
+                utterance.text = textToPlay;
+                
+                // Imposta la lingua (italiano)
+                utterance.lang = 'it-IT';
+                
+                // Imposta la velocità e il tono
+                utterance.rate = 1.0;
+                utterance.pitch = 1.0;
+                utterance.volume = 1.0;
+                
+                // Gestione eventi
+                utterance.onstart = function() {
+                    isPlaying = true;
+                    document.getElementById('playText').style.display = 'none';
+                    document.getElementById('stopPlayback').style.display = 'flex';
+                    document.getElementById('playbackStatus').textContent = 'Riproduzione in corso...';
+                    document.getElementById('playbackStatus').style.display = 'block';
+                };
+                
+                utterance.onend = function() {
+                    isPlaying = false;
+                    document.getElementById('playText').style.display = 'flex';
+                    document.getElementById('stopPlayback').style.display = 'none';
+                    document.getElementById('playbackStatus').textContent = 'Riproduzione completata';
+                    setTimeout(() => {
+                        document.getElementById('playbackStatus').style.display = 'none';
+                    }, 2000);
+                };
+                
+                utterance.onerror = function(event) {
+                    isPlaying = false;
+                    document.getElementById('playText').style.display = 'flex';
+                    document.getElementById('stopPlayback').style.display = 'none';
+                    document.getElementById('playbackStatus').textContent = 'Errore durante la riproduzione: ' + event.error;
+                    document.getElementById('playbackStatus').style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('playbackStatus').style.display = 'none';
+                    }, 3000);
+                };
+                
+                // Avvia la riproduzione
+                synthesis.speak(utterance);
+                
+            } else {
+                alert('Non c\'è testo da riprodurre!');
+            }
+        });
+
+        // Ferma la riproduzione
+        document.getElementById('stopPlayback').addEventListener('click', function() {
+            if (synthesis && isPlaying) {
+                synthesis.cancel();
+                isPlaying = false;
+                document.getElementById('playText').style.display = 'flex';
+                document.getElementById('stopPlayback').style.display = 'none';
+                document.getElementById('playbackStatus').textContent = 'Riproduzione interrotta';
+                document.getElementById('playbackStatus').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('playbackStatus').style.display = 'none';
+                }, 2000);
+            }
+        });
+
+        // Passa alla pagina successiva
+        document.getElementById('nextPage').addEventListener('click', function() {
+            // SALVA DEFINITIVAMENTE IL TESTO CORRETTO
+            saveCorrectedText();
+            
+            // Verifica che il testo sia stato salvato
+            const savedText = localStorage.getItem('TestoCorrettoSSML');
+            if (!savedText) {
+                alert('Errore nel salvataggio del testo corretto. Riprova.');
+                return;
+            }
+            
+            console.log('✅ Testo corretto salvato per preview:', savedText.substring(0, 50) + '...');
+            
+            // Aggiungi effetto visivo
+            const nextButton = document.getElementById('nextPage');
+            nextButton.style.backgroundColor = '#b04a5e';
+            setTimeout(() => {
+                nextButton.style.backgroundColor = '#cf6679';
+                
+                // Reindirizza alla pagina di anteprima
+                window.location.href = 'preview.html';
+            }, 300);
         });
     </script>
 </body>

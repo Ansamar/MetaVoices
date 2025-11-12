@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +10,7 @@
     
     <!-- Stili CSS -->
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/analysis.css">
 </head>
 <body>
     <!-- Header -->
@@ -22,9 +23,14 @@
             </div>
             <div class="header-actions">
                 <div class="progress-indicator">
-                    <span class="progress-step">1</span>
+                    <span class="progress-step completed">1</span>
                     <span class="progress-step active">2</span>
-                    <span class="progress-label">Analisi</span>
+                    <span class="progress-step">3</span>
+                    <div class="progress-labels">
+                        <span class="progress-label">Voce</span>
+                        <span class="progress-label">Analisi</span>
+                        <span class="progress-label">SSML</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -32,85 +38,91 @@
 
     <!-- Contenuto principale -->
     <main class="main-content vertical-flow">
-        <!-- Textarea Centrale con Highlight -->
+        <!-- Testo Ereditato -->
         <section class="text-section">
             <div class="section-header">
-                <h2><i class="fas fa-edit"></i> Testo da Analizzare</h2>
-                <div class="text-actions">
-                    <button id="toggleHighlightBtn" class="btn-secondary">
-                        <i class="fas fa-highlighter"></i>
-                        <span id="highlightToggleText">Nascondi Highlight</span>
+                <h2><i class="fas fa-edit"></i> Testo da Sintetizzare</h2>
+                <div class="analysis-controls">
+                    <button id="analyzeTextBtn" class="btn-primary">
+                        <i class="fas fa-search"></i>
+                        Analizza Testo
+                    </button>
+                    <button id="replayCorrectedBtn" class="btn-secondary">
+                        <i class="fas fa-redo"></i>
+                        Riascolta Brano Corretto
                     </button>
                 </div>
             </div>
             <div class="text-container">
-                <div id="textDisplay" class="text-display">
-                    <!-- Il testo con highlight apparirà qui -->
+                <div id="textDisplay" class="text-display analysis-text">
+                    <!-- Il testo migrato da index.html apparirà qui -->
                 </div>
                 
-                <div class="text-actions">
-                    <button id="analyzeBtn" class="btn-primary">
-                        <i class="fas fa-search"></i>
-                        Analizza Testo
+                <div class="text-stats">
+                    <span class="stat">
+                        <i class="fas fa-font"></i>
+                        <span id="charCount">0</span> caratteri
+                    </span>
+                    <span class="stat">
+                        <i class="fas fa-file-word"></i>
+                        <span id="wordCount">0</span> parole
+                    </span>
+                    <span class="stat">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span id="issuesCount">0</span> parole ambigue
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Info Voce e Filtri -->
+        <section class="voice-info-section">
+            <div class="section-header">
+                <h2><i class="fas fa-info-circle"></i> Impostazioni Correnti</h2>
+            </div>
+            <div class="voice-info-grid">
+                <div class="info-item">
+                    <span class="info-label">Voce Selezionata:</span>
+                    <span id="currentVoice" class="info-value">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Tono (Pitch):</span>
+                    <span id="currentPitch" class="info-value">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Volume:</span>
+                    <span id="currentVolume" class="info-value">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Velocità:</span>
+                    <span id="currentSpeed" class="info-value">-</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pannello Alternative -->
+        <section class="alternatives-section" id="alternativesPanel" style="display: none;">
+            <div class="section-header">
+                <h2><i class="fas fa-exchange-alt"></i> Alternative Disponibili</h2>
+            </div>
+            <div class="alternatives-container">
+                <div id="currentWordInfo" class="current-word-info">
+                    Parola selezionata: <span id="selectedWord" class="highlighted-word"></span>
+                    <div id="wordType" class="word-type"></div>
+                </div>
+                <div id="wordMeanings" class="word-meanings"></div>
+                <div id="alternativesList" class="alternatives-list">
+                    <!-- Le alternative verranno generate qui dinamicamente -->
+                </div>
+                <div class="alternatives-actions">
+                    <button id="applyAlternativeBtn" class="btn-secondary" disabled>
+                        <i class="fas fa-check"></i>
+                        Applica Modifica
                     </button>
-                    
-                    <div class="text-stats">
-                        <span class="stat">
-                            <i class="fas fa-file-word"></i>
-                            <span id="wordCount">0</span> parole
-                        </span>
-                        <span class="stat">
-                            <i class="fas fa-clock"></i>
-                            <span id="readingTime">0</span> min
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Analisi Automatica -->
-        <section class="analysis-section">
-            <div class="section-header">
-                <h2><i class="fas fa-chart-bar"></i> Analisi Automatica</h2>
-                <div class="analysis-stats">
-                    <span class="stat-badge" id="ambiguitiesCount">0</span>
-                    <span>parole ambigue trovate</span>
-                </div>
-            </div>
-            
-            <div class="analysis-controls">
-                <label class="toggle-switch">
-                    <input type="checkbox" id="autoCorrectToggle">
-                    <span class="toggle-slider"></span>
-                    <span class="toggle-label">Correzione automatica</span>
-                </label>
-                
-                <button id="applyAllBtn" class="btn-secondary" disabled>
-                    <i class="fas fa-bolt"></i>
-                    Applica tutte le correzioni
-                </button>
-            </div>
-
-            <div id="ambiguitiesList" class="ambiguities-list">
-                <div class="empty-state">
-                    <i class="fas fa-search"></i>
-                    <h3>Nessuna analisi effettuata</h3>
-                    <p>Clicca "Analizza Testo" per iniziare l'analisi</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Suggerimenti -->
-        <section class="suggestions-section">
-            <div class="section-header">
-                <h2><i class="fas fa-lightbulb"></i> Suggerimenti di Correzione</h2>
-            </div>
-            
-            <div id="suggestionsList" class="suggestions-list">
-                <div class="empty-state">
-                    <i class="fas fa-lightbulb"></i>
-                    <h3>Nessun suggerimento disponibile</h3>
-                    <p>I suggerimenti appariranno qui dopo l'analisi</p>
+                    <button id="ignoreWordBtn" class="btn-secondary">
+                        <i class="fas fa-times"></i>
+                        Ignora Parola
+                    </button>
                 </div>
             </div>
         </section>
@@ -120,10 +132,10 @@
             <div class="nav-actions">
                 <button id="backBtn" class="btn-secondary">
                     <i class="fas fa-arrow-left"></i>
-                    Indietro
+                    Torna alla Selezione Voce
                 </button>
                 <button id="nextBtn" class="btn-primary btn-large">
-                    <span>Avanti: Controlli SSML</span>
+                    <span>Avanti: Generazione SSML</span>
                     <i class="fas fa-arrow-right"></i>
                 </button>
             </div>
@@ -139,36 +151,943 @@
         </div>
     </footer>
 
-    <!-- Scripts -->
-    <script src="js/ambiguous-words-loader.js"></script>
-    <script src="js/text-analysis.js"></script>
-    <script src="js/app-analysis.js"></script>
+    <!-- Elemento Audio nascosto -->
+    <audio id="audioPlayer" style="display: none;"></audio>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 MetaVoices - Schermata 2: Analisi Testo');
-        });
-    </script>
-    
-    <!-- Navigation Script -->
-    <script>
-        // NAVIGAZIONE ANALYSIS -> SSML
-        document.addEventListener('DOMContentLoaded', function() {
-            const nextBtn = document.getElementById('nextBtn');
-            if (nextBtn) {
-                nextBtn.addEventListener('click', function() {
-                    console.log('👉 Navigazione a ssml.html');
+        // Database delle parole ambigue dal tuo file JSON
+        const ambiguousWordsDatabase = {
+  "ancora": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: oggetto marino", "avverbio: di nuovo"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: oggetto marino", 
+        "correction": "àncora",
+        "example": "L'àncora della nave era molto pesante."
+      },
+      { 
+        "context": "avverbio: di nuovo", 
+        "correction": "ancóra",
+        "example": "Devi ripeterlo ancóra una volta."
+      }
+    ]
+  },
+  "papa": {
+    "type": "accentazione",
+    "meanings": ["titolo ecclesiastico", "genitore maschio"],
+    "suggestions": [
+      { 
+        "context": "titolo ecclesiastico", 
+        "correction": "pàpa",
+        "example": "Il pàpa ha visitato la città."
+      },
+      { 
+        "context": "genitore maschio", 
+        "correction": "papà",
+        "example": "Mio papà è molto forte."
+      }
+    ]
+  },
+  "principi": {
+    "type": "accentazione",
+    "meanings": ["plurale di principe", "plurale di principio"],
+    "suggestions": [
+      { 
+        "context": "plurale di principe", 
+        "correction": "prìncipi",
+        "example": "I prìncipi vivono nei castelli."
+      },
+      { 
+        "context": "plurale di principio", 
+        "correction": "princìpi",
+        "example": "I princìpi della fisica sono importanti."
+      }
+    ]
+  },
+  "legge": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: norma giuridica", "verbo: terza persona di leggere"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: norma giuridica", 
+        "correction": "lègge",
+        "example": "La lègge va rispettata da tutti."
+      },
+      { 
+        "context": "verbo: terza persona di leggere", 
+        "correction": "légge",
+        "example": "Lui légge un libro ogni settimana."
+      }
+    ]
+  },
+  "colto": {
+    "type": "accentazione",
+    "meanings": ["participio passato di cogliere", "aggettivo: istruito"],
+    "suggestions": [
+      { 
+        "context": "participio passato di cogliere", 
+        "correction": "còlto",
+        "example": "Il frutto è stato còlto dall'albero."
+      },
+      { 
+        "context": "aggettivo: istruito", 
+        "correction": "cólto",
+        "example": "È una persona molto cólta e intelligente."
+      }
+    ]
+  },
+  "subito": {
+    "type": "accentazione",
+    "meanings": ["avverbio: immediatamente", "participio passato di subire"],
+    "suggestions": [
+      { 
+        "context": "avverbio: immediatamente", 
+        "correction": "sùbito",
+        "example": "Vieni qui sùbito!"
+      },
+      { 
+        "context": "participio passato di subire", 
+        "correction": "subìto",
+        "example": "Ha subìto un'ingiustizia."
+      }
+    ]
+  },
+  "pesca": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: frutto", "sostantivo: attività sportiva"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: frutto", 
+        "correction": "pèsca",
+        "example": "Ho mangiato una pèsca matura."
+      },
+      { 
+        "context": "sostantivo: attività sportiva", 
+        "correction": "pésca",
+        "example": "Mi piace andare a pésca la domenica."
+      }
+    ]
+  },
+  "meta": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: obiettivo", "sostantivo: metà (numero)"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: obiettivo", 
+        "correction": "mèta",
+        "example": "La mèta del viaggio era Roma."
+      },
+      { 
+        "context": "sostantivo: metà (numero)", 
+        "correction": "metà",
+        "example": "Solo metà degli studenti era presente."
+      }
+    ]
+  },
+  "compito": {
+    "type": "accentazione",
+    "meanings": ["aggettivo: educato", "sostantivo: incarico"],
+    "suggestions": [
+      { 
+        "context": "aggettivo: educato", 
+        "correction": "còmpito",
+        "example": "Il bambino era molto còmpito."
+      },
+      { 
+        "context": "sostantivo: incarico", 
+        "correction": "compìto",
+        "example": "Devo svolgere questo compìto per domani."
+      }
+    ]
+  },
+  "capito": {
+    "type": "accentazione",
+    "meanings": ["verbo: da capitare", "participio passato di capire"],
+    "suggestions": [
+      { 
+        "context": "verbo: da capitare", 
+        "correction": "càpito",
+        "example": "Mi càpito spesso di vederlo."
+      },
+      { 
+        "context": "participio passato di capire", 
+        "correction": "capìto",
+        "example": "Non ho capìto la spiegazione."
+      }
+    ]
+  },
+  "affetto": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: sentimento", "verbo: da affettare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: sentimento", 
+        "correction": "affètto",
+        "example": "Provo molto affètto per te."
+      },
+      { 
+        "context": "verbo: da affettare", 
+        "correction": "affétto",
+        "example": "Lui affétto il pane per la colazione."
+      }
+    ]
+  },
+  "verso": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: poesia", "verbo: da versare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: poesia", 
+        "correction": "vèrso",
+        "example": "Questo vèrso è molto bello."
+      },
+      { 
+        "context": "verbo: da versare", 
+        "correction": "versò",
+        "example": "Lui versò il vino nei bicchieri."
+      }
+    ]
+  },
+  "rubrica": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: agenda", "sostantivo: categoria"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: agenda", 
+        "correction": "rùbrica",
+        "example": "Ho scritto il numero nella rùbrica."
+      },
+      { 
+        "context": "sostantivo: categoria", 
+        "correction": "rubrìca",
+        "example": "Questo articolo appartiene alla rubrìca sport."
+      }
+    ]
+  },
+  "mani": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: parti del corpo", "verbo: da manire"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: parti del corpo", 
+        "correction": "màni",
+        "example": "Le màni sono importanti per lavorare."
+      },
+      { 
+        "context": "verbo: da manire", 
+        "correction": "manì",
+        "example": "Lui manì gli attrezzi con cura."
+      }
+    ]
+  },
+  "canto": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: musica", "verbo: da cantare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: musica", 
+        "correction": "cànto",
+        "example": "Il cànto degli uccelli è melodioso."
+      },
+      { 
+        "context": "verbo: da cantare", 
+        "correction": "cantò",
+        "example": "Lui cantò una canzone bellissima."
+      }
+    ]
+  },
+  "parlo": {
+    "type": "accentazione",
+    "meanings": ["verbo: presente", "verbo: passato"],
+    "suggestions": [
+      { 
+        "context": "verbo: presente", 
+        "correction": "pàrlo",
+        "example": "Io pàrlo italiano e inglese."
+      },
+      { 
+        "context": "verbo: passato", 
+        "correction": "parlò",
+        "example": "Lui parlò per ore alla conferenza."
+      }
+    ]
+  },
+  "credo": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: fede", "verbo: da credere"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: fede", 
+        "correction": "crèdo",
+        "example": "Il crèdo religioso è importante."
+      },
+      { 
+        "context": "verbo: da credere", 
+        "correction": "credò",
+        "example": "Lui credò alle mie parole."
+      }
+    ]
+  },
+  "mangio": {
+    "type": "accentazione",
+    "meanings": ["verbo: presente", "verbo: passato"],
+    "suggestions": [
+      { 
+        "context": "verbo: presente", 
+        "correction": "màngio",
+        "example": "Io màngio la mela ogni giorno."
+      },
+      { 
+        "context": "verbo: passato", 
+        "correction": "mangiò",
+        "example": "Lui mangiò tutto il dolce."
+      }
+    ]
+  },
+  "volto": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: faccia", "verbo: da volgere"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: faccia", 
+        "correction": "vòlto",
+        "example": "Il suo vòlto era sereno."
+      },
+      { 
+        "context": "verbo: da volgere", 
+        "correction": "voltò",
+        "example": "Lui voltò la pagina del libro."
+      }
+    ]
+  },
+  "torto": {
+    "type": "accentazione",
+    "meanings": ["aggettivo: storto", "verbo: da torcere"],
+    "suggestions": [
+      { 
+        "context": "aggettivo: storto", 
+        "correction": "tòrto",
+        "example": "Il chiodo era tòrto."
+      },
+      { 
+        "context": "verbo: da torcere", 
+        "correction": "tortò",
+        "example": "Lui tortò il filo di ferro."
+      }
+    ]
+  },
+  "capito_forma": {
+    "type": "accentazione",
+    "meanings": ["verbo: passato", "verbo: presente"],
+    "suggestions": [
+      { 
+        "context": "verbo: passato", 
+        "correction": "càpitò",
+        "example": "Gli càpitò un incidente."
+      },
+      { 
+        "context": "verbo: presente", 
+        "correction": "càpito",
+        "example": "Mi càpito spesso di sbagliare."
+      }
+    ]
+  },
+  "principio": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: inizio", "sostantivo: regola"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: inizio", 
+        "correction": "princìpio",
+        "example": "Il princìpio della storia è avvincente."
+      },
+      { 
+        "context": "sostantivo: regola", 
+        "correction": "prìncipio",
+        "example": "Il prìncipio di Archimede è famoso."
+      }
+    ]
+  },
+  "spirito": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: anima", "verbo: da spirare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: anima", 
+        "correction": "spìrito",
+        "example": "Lo spìrito umano è forte."
+      },
+      { 
+        "context": "verbo: da spirare", 
+        "correction": "spirò",
+        "example": "Il ferito spirò all'ospedale."
+      }
+    ]
+  },
+  "predica": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: sermone", "verbo: da predicare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: sermone", 
+        "correction": "prèdica",
+        "example": "La prèdica del sacerdote era commovente."
+      },
+      { 
+        "context": "verbo: da predicare", 
+        "correction": "predìca",
+        "example": "Lui predìca il Vangelo."
+      }
+    ]
+  },
+  "anima": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: spirito", "verbo: da animare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: spirito", 
+        "correction": "ànima",
+        "example": "L'ànima è immortale."
+      },
+      { 
+        "context": "verbo: da animare", 
+        "correction": "anìma",
+        "example": "Lui anìma la festa con la sua allegria."
+      }
+    ]
+  },
+  "regno": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: territorio", "verbo: da regnare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: territorio", 
+        "correction": "régno",
+        "example": "Il régno di Francia era vasto."
+      },
+      { 
+        "context": "verbo: da regnare", 
+        "correction": "regnò",
+        "example": "Il re regnò per cinquant'anni."
+      }
+    ]
+  },
+  "eserciti": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: forze armate", "verbo: da esercitare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: forze armate", 
+        "correction": "esèrciti",
+        "example": "Gli esèrciti si scontrarono in battaglia."
+      },
+      { 
+        "context": "verbo: da esercitare", 
+        "correction": "esercìti",
+        "example": "Lui esercìti la professione con passione."
+      }
+    ]
+  },
+  "deserto": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: zona arida", "verbo: da desertare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: zona arida", 
+        "correction": "desèrto",
+        "example": "Il desèrto del Sahara è immenso."
+      },
+      { 
+        "context": "verbo: da desertare", 
+        "correction": "desertò",
+        "example": "Il soldato desertò dall'esercito."
+      }
+    ]
+  },
+  "calice": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: coppa", "sostantivo: parte del fiore"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: coppa", 
+        "correction": "càlice",
+        "example": "Il càlice per il vino era di cristallo."
+      },
+      { 
+        "context": "sostantivo: parte del fiore", 
+        "correction": "calíce",
+        "example": "Il calíce del fiore è verde."
+      }
+    ]
+  },
+  "passo": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: movimento", "verbo: da passare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: movimento", 
+        "correction": "pàsso",
+        "example": "Il pàsso successivo è importante."
+      },
+      { 
+        "context": "verbo: da passare", 
+        "correction": "passò",
+        "example": "Lui passò davanti alla casa."
+      }
+    ]
+  },
+  "porto": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: luogo navale", "verbo: da portare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: luogo navale", 
+        "correction": "pòrto",
+        "example": "Il pòrto di Genova è grande."
+      },
+      { 
+        "context": "verbo: da portare", 
+        "correction": "portò",
+        "example": "Lui portò i bagagli in camera."
+      }
+    ]
+  },
+  "giudico": {
+    "type": "accentazione",
+    "meanings": ["verbo: presente", "verbo: passato"],
+    "suggestions": [
+      { 
+        "context": "verbo: presente", 
+        "correction": "giùdico",
+        "example": "Io giùdico le situazioni con calma."
+      },
+      { 
+        "context": "verbo: passato", 
+        "correction": "giudicò",
+        "example": "Il tribunale giudicò l'imputato."
+      }
+    ]
+  },
+  "lavo": {
+    "type": "accentazione",
+    "meanings": ["verbo: presente", "verbo: passato"],
+    "suggestions": [
+      { 
+        "context": "verbo: presente", 
+        "correction": "làvo",
+        "example": "Io làvo i piatti dopo cena."
+      },
+      { 
+        "context": "verbo: passato", 
+        "correction": "lavò",
+        "example": "Lui lavò la macchina ieri."
+      }
+    ]
+  },
+  "libro": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: volume", "verbo: da librare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: volume", 
+        "correction": "lìbro",
+        "example": "Questo lìbro è molto interessante."
+      },
+      { 
+        "context": "verbo: da librare", 
+        "correction": "librò",
+        "example": "L'aquila si librò nel cielo."
+      }
+    ]
+  },
+  "salmi": {
+    "type": "accentazione",
+    "meanings": ["sostantivo: preghiere", "verbo: da salmare"],
+    "suggestions": [
+      { 
+        "context": "sostantivo: preghiere", 
+        "correction": "sàlmi",
+        "example": "I sàlmi sono testi religiosi."
+      },
+      { 
+        "context": "verbo: da salmare", 
+        "correction": "salmì",
+        "example": "Lui salmì il pesce per conservarlo."
+      }
+    ]
+  }
+};
+
+        class AnalysisPageManager {
+            constructor() {
+                this.text = '';
+                this.voiceSettings = null;
+                this.ambiguousWords = [];
+                this.currentSelectedWord = null;
+                this.currentAlternatives = [];
+                this.ignoredWords = new Set();
+                this.init();
+            }
+
+            init() {
+                this.loadElements();
+                this.setupEventListeners();
+                this.loadInheritedData();
+                this.updateCounters();
+                console.log('✅ Analysis Page Manager inizializzato');
+            }
+
+            loadElements() {
+                this.elements = {
+                    textDisplay: document.getElementById('textDisplay'),
+                    analyzeTextBtn: document.getElementById('analyzeTextBtn'),
+                    replayCorrectedBtn: document.getElementById('replayCorrectedBtn'),
+                    charCount: document.getElementById('charCount'),
+                    wordCount: document.getElementById('wordCount'),
+                    issuesCount: document.getElementById('issuesCount'),
+                    currentVoice: document.getElementById('currentVoice'),
+                    currentPitch: document.getElementById('currentPitch'),
+                    currentVolume: document.getElementById('currentVolume'),
+                    currentSpeed: document.getElementById('currentSpeed'),
+                    alternativesPanel: document.getElementById('alternativesPanel'),
+                    selectedWord: document.getElementById('selectedWord'),
+                    wordType: document.getElementById('wordType'),
+                    wordMeanings: document.getElementById('wordMeanings'),
+                    alternativesList: document.getElementById('alternativesList'),
+                    applyAlternativeBtn: document.getElementById('applyAlternativeBtn'),
+                    ignoreWordBtn: document.getElementById('ignoreWordBtn'),
+                    backBtn: document.getElementById('backBtn'),
+                    nextBtn: document.getElementById('nextBtn'),
+                    statusMessage: document.getElementById('statusMessage'),
+                    audioPlayer: document.getElementById('audioPlayer')
+                };
+            }
+
+            setupEventListeners() {
+                this.elements.analyzeTextBtn.addEventListener('click', () => this.analyzeText());
+                this.elements.replayCorrectedBtn.addEventListener('click', () => this.replayCorrectedText());
+                this.elements.applyAlternativeBtn.addEventListener('click', () => this.applyAlternative());
+                this.elements.ignoreWordBtn.addEventListener('click', () => this.ignoreWord());
+                this.elements.backBtn.addEventListener('click', () => this.goBack());
+                this.elements.nextBtn.addEventListener('click', () => this.goToNextPage());
+            }
+
+            loadInheritedData() {
+                // Carica il testo da index.html
+                const savedText = localStorage.getItem('metavoices_text_input');
+                if (savedText) {
+                    this.text = savedText;
+                    this.elements.textDisplay.textContent = savedText;
+                    this.showStatus('Testo caricato correttamente', 'success');
+                } else {
+                    this.showStatus('Nessun testo trovato. Torna alla pagina precedente.', 'error');
+                }
+
+                // Carica le impostazioni voce
+                const savedVoiceSettings = localStorage.getItem('metavoices_voice_settings');
+                if (savedVoiceSettings) {
+                    this.voiceSettings = JSON.parse(savedVoiceSettings);
+                    this.displayVoiceSettings();
+                }
+
+                this.updateCounters();
+            }
+
+            displayVoiceSettings() {
+                if (this.voiceSettings) {
+                    this.elements.currentVoice.textContent = this.voiceSettings.voiceName || '-';
+                    this.elements.currentPitch.textContent = this.voiceSettings.pitch + ' st' || '-';
+                    this.elements.currentVolume.textContent = this.voiceSettings.volume + '%' || '-';
+                    this.elements.currentSpeed.textContent = this.voiceSettings.speed + 'x' || '-';
+                }
+            }
+
+            analyzeText() {
+                if (!this.text.trim()) {
+                    this.showStatus('Inserisci del testo da analizzare', 'error');
+                    return;
+                }
+
+                this.showStatus('Analisi del testo in corso...', 'loading');
+
+                // Simula l'analisi del testo
+                setTimeout(() => {
+                    this.findAmbiguousWords();
+                    this.highlightAmbiguousWords();
+                    this.updateCounters();
+                    this.showStatus('Analisi completata. ' + this.ambiguousWords.length + ' parole ambigue trovate.', 'success');
+                }, 1000);
+            }
+
+            findAmbiguousWords() {
+                this.ambiguousWords = [];
+                // Dividi il testo in parole, mantenendo la punteggiatura separata
+                const words = this.text.split(/(\b|\s+)/);
+                
+                words.forEach((word, index) => {
+                    // Pulisci la parola rimuovendo punteggiatura e spazi
+                    const cleanWord = word.toLowerCase().replace(/[.,!?;:'"()\s]/g, '');
+                    
+                    // DEBUG: Mostra tutte le parole processate
+                    console.log(`Parola: "${word}", Pulita: "${cleanWord}"`);
+                    
+                    if (cleanWord && ambiguousWordsDatabase[cleanWord] && !this.ignoredWords.has(index)) {
+                        console.log(`Trovata parola ambigua: ${cleanWord}`);
+                        this.ambiguousWords.push({
+                            index: index,
+                            word: word,
+                            cleanWord: cleanWord,
+                            data: ambiguousWordsDatabase[cleanWord],
+                            position: this.getWordPosition(words, index)
+                        });
+                    }
+                });
+                
+                console.log(`Totale parole ambigue trovate: ${this.ambiguousWords.length}`, this.ambiguousWords);
+            }
+
+            getWordPosition(words, targetIndex) {
+                let position = 0;
+                for (let i = 0; i < targetIndex; i++) {
+                    position += words[i].length;
+                }
+                return position;
+            }
+
+            highlightAmbiguousWords() {
+                let highlightedText = '';
+                const words = this.text.split(/(\b|\s+)/);
+                
+                words.forEach((word, index) => {
+                    const isAmbiguous = this.ambiguousWords.some(aw => aw.index === index);
+                    
+                    if (isAmbiguous && word.trim()) {
+                        highlightedText += `<span class="ambiguous-word" data-word-index="${index}">${word}</span>`;
+                    } else {
+                        highlightedText += word;
+                    }
+                });
+
+                this.elements.textDisplay.innerHTML = highlightedText;
+
+                // Aggiungi event listeners per le parole ambigue
+                document.querySelectorAll('.ambiguous-word').forEach(element => {
+                    element.addEventListener('mouseenter', (e) => this.showAlternatives(e));
+                    element.addEventListener('click', (e) => this.selectWord(e));
+                });
+            }
+
+            showAlternatives(event) {
+                const wordIndex = parseInt(event.target.getAttribute('data-word-index'));
+                const ambiguousWord = this.ambiguousWords.find(aw => aw.index === wordIndex);
+                
+                if (ambiguousWord) {
+                    this.elements.selectedWord.textContent = ambiguousWord.word;
+                    this.displayWordInfo(ambiguousWord.data);
+                    this.displayAlternatives(ambiguousWord.data.suggestions);
+                    this.currentSelectedWord = ambiguousWord;
+                }
+            }
+
+            selectWord(event) {
+                const wordIndex = parseInt(event.target.getAttribute('data-word-index'));
+                const ambiguousWord = this.ambiguousWords.find(aw => aw.index === wordIndex);
+                
+                if (ambiguousWord) {
+                    this.elements.selectedWord.textContent = ambiguousWord.word;
+                    this.displayWordInfo(ambiguousWord.data);
+                    this.displayAlternatives(ambiguousWord.data.suggestions);
+                    this.currentSelectedWord = ambiguousWord;
+                    this.elements.alternativesPanel.style.display = 'block';
+                    
+                    // Rimuovi selezione precedente
+                    document.querySelectorAll('.ambiguous-word.selected').forEach(el => {
+                        el.classList.remove('selected');
+                    });
+                    
+                    // Aggiungi selezione corrente
+                    event.target.classList.add('selected');
+                }
+            }
+
+            displayWordInfo(wordData) {
+                // Mostra il tipo di ambiguità
+                this.elements.wordType.textContent = `Tipo: ${wordData.type}`;
+                this.elements.wordType.className = 'word-type';
+                
+                // Mostra i significati
+                this.elements.wordMeanings.innerHTML = `
+                    <div class="meanings-title">Significati possibili:</div>
+                    <ul class="meanings-list">
+                        ${wordData.meanings.map(meaning => `<li>${meaning}</li>`).join('')}
+                    </ul>
+                `;
+            }
+
+            displayAlternatives(suggestions) {
+                this.elements.alternativesList.innerHTML = '';
+                this.currentAlternatives = suggestions;
+
+                suggestions.forEach((suggestion, index) => {
+                    const alternativeElement = document.createElement('div');
+                    alternativeElement.className = 'alternative-option';
+                    alternativeElement.innerHTML = `
+                        <input type="radio" name="alternative" id="alt${index}" value="${suggestion.correction}">
+                        <label for="alt${index}">
+                            <strong>${suggestion.correction}</strong>
+                            <div class="alternative-context">${suggestion.context}</div>
+                            <div class="alternative-example">${suggestion.example}</div>
+                        </label>
+                    `;
+                    
+                    alternativeElement.addEventListener('click', () => {
+                        this.elements.applyAlternativeBtn.disabled = false;
+                    });
+                    
+                    this.elements.alternativesList.appendChild(alternativeElement);
+                });
+            }
+
+            async replayCorrectedText() {
+                if (!this.voiceSettings) {
+                    this.showStatus('Nessuna voce selezionata per la riproduzione', 'error');
+                    return;
+                }
+
+                const correctedText = this.text;
+                
+                if (!correctedText.trim()) {
+                    this.showStatus('Nessun testo da riprodurre', 'error');
+                    return;
+                }
+
+                console.log('🔊 Riascolto brano corretto:', correctedText);
+                this.showStatus('Generazione audio del brano corretto...', 'loading');
+
+                try {
+                    const apiKey = localStorage.getItem('elevenlabs_api_key');
+                    
+                    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${this.voiceSettings.voiceId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Xi-Api-Key': apiKey,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            text: correctedText,
+                            model_id: "eleven_multilingual_v2",
+                            voice_settings: {
+                                stability: 0.5,
+                                similarity_boost: 0.8,
+                                style: 0.2,
+                                use_speaker_boost: true,
+                                speed: this.voiceSettings.speed || 1.0
+                            }
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(`Errore API: ${response.status} - ${errorText}`);
+                    }
+
+                    const audioBlob = await response.blob();
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    this.elements.audioPlayer.src = audioUrl;
+                    
+                    this.elements.audioPlayer.onloadeddata = async () => {
+                        await this.elements.audioPlayer.play();
+                        this.showStatus('Brano corretto riprodotto con successo', 'success');
+                    };
+                    
+                    this.elements.audioPlayer.onerror = () => {
+                        this.showStatus('Errore nella riproduzione audio', 'error');
+                    };
+
+                } catch (error) {
+                    console.error('❌ Errore riproduzione brano corretto:', error);
+                    this.showStatus('Errore nella riproduzione: ' + error.message, 'error');
+                }
+            }
+
+            applyAlternative() {
+                if (!this.currentSelectedWord) return;
+
+                const selectedAlternative = document.querySelector('input[name="alternative"]:checked');
+                if (!selectedAlternative) {
+                    this.showStatus('Seleziona un\'alternativa prima di applicare', 'error');
+                    return;
+                }
+
+                const newWord = selectedAlternative.value;
+                const words = this.text.split(/(\b|\s+)/);
+                
+                // Sostituisce solo la parola specifica selezionata
+                words[this.currentSelectedWord.index] = newWord;
+                
+                this.text = words.join('');
+                this.elements.textDisplay.textContent = this.text;
+                
+                // Aggiorna il localStorage
+                localStorage.setItem('metavoices_text_input', this.text);
+                
+                // Rianalizza il testo per aggiornare le evidenziazioni
+                this.analyzeText();
+                
+                this.elements.alternativesPanel.style.display = 'none';
+                this.showStatus('Parola sostituita correttamente', 'success');
+            }
+
+            ignoreWord() {
+                if (!this.currentSelectedWord) return;
+
+                this.ignoredWords.add(this.currentSelectedWord.index);
+                this.analyzeText(); // Rianalizza per aggiornare le evidenziazioni
+                this.elements.alternativesPanel.style.display = 'none';
+                this.showStatus('Parola ignorata nell\'analisi', 'info');
+            }
+
+            updateCounters() {
+                const characters = this.text.length;
+                const words = this.text.trim() ? this.text.trim().split(/\s+/).length : 0;
+
+                this.elements.charCount.textContent = characters;
+                this.elements.wordCount.textContent = words;
+                this.elements.issuesCount.textContent = this.ambiguousWords.length;
+            }
+
+            goBack() {
+                window.location.href = 'index.html';
+            }
+
+            goToNextPage() {
+                // Salva il testo analizzato
+                localStorage.setItem('metavoices_text_input', this.text);
+                
+                this.showStatus('Testo analizzato salvato, redirect in corso...', 'success');
+                
+                setTimeout(() => {
                     window.location.href = 'ssml.html';
-                });
+                }, 500);
             }
-            
-            const backBtn = document.getElementById('backBtn');
-            if (backBtn) {
-                backBtn.addEventListener('click', function() {
-                    console.log('⬅️ Navigazione a index.html');
-                    window.location.href = 'index.html';
-                });
+
+            showStatus(message, type = 'info') {
+                this.elements.statusMessage.textContent = message;
+                this.elements.statusMessage.className = `status status-${type}`;
+                
+                if (type !== 'loading') {
+                    setTimeout(() => {
+                        this.elements.statusMessage.textContent = '';
+                        this.elements.statusMessage.className = 'status';
+                    }, 4000);
+                }
             }
+        }
+
+        // Inizializzazione
+        document.addEventListener('DOMContentLoaded', function() {
+            window.analysisManager = new AnalysisPageManager();
         });
     </script>
 </body>

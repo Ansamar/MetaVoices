@@ -1,290 +1,343 @@
-/**
- * APP SSML - Controlli SSML per MetaVoices
- */
-
-class SSMLApp {
+// ssml.js - CORRETTO con API ElevenLabs per SSML
+class SSMLManager {
     constructor() {
-        this.currentText = '';
-        this.ssmlControls = [];
+        this.selectedText = '';
+        this.selectionStart = 0;
+        this.selectionEnd = 0;
+        this.isPlaying = false;
+        this.currentAudio = null;
         this.init();
     }
 
     init() {
-        console.log('🎯 SSML App inizializzata');
-        this.loadData();
+        this.loadElements();
         this.setupEventListeners();
-        this.renderText();
-        this.updateStats();
+        this.loadTextFromStorage();
+        this.updateCounters();
+        console.log('✅ SSML Manager inizializzato');
     }
 
-    loadData() {
-        // Carica i dati dalla pagina precedente
-        const savedData = localStorage.getItem('metavoices_data');
-        if (savedData) {
-            const data = JSON.parse(savedData);
-            this.currentText = data.text || '';
-            console.log('📥 Testo caricato:', this.currentText);
-        }
+    loadElements() {
+        this.elements = {
+            textArea: document.getElementById('textArea'),
+            ssmlControls: document.getElementById('ssmlControls'),
+            presetControls: document.getElementById('presetControls'),
+            applyFilter: document.getElementById('applyFilter'),
+            playText: document.getElementById('playText'),
+            stopPlayback: document.getElementById('stopPlayback'),
+            nextPage: document.getElementById('nextPage'),
+            playbackStatus: document.getElementById('playbackStatus'),
+            statusText: document.getElementById('statusText'),
+            selectionInfo: document.getElementById('selectionInfo'),
+            charCount: document.getElementById('charCount'),
+            ssmlTagsCount: document.getElementById('ssmlTagsCount')
+        };
     }
 
     setupEventListeners() {
+        // Selezione testo
+        this.elements.textArea.addEventListener('mouseup', () => this.handleTextSelection());
+        this.elements.textArea.addEventListener('keyup', () => this.handleTextSelection());
+
+        // Applicazione filtri
+        this.elements.applyFilter.addEventListener('click', () => this.applySSMLFilter());
+
+        // Riproduzione audio con ElevenLabs
+        this.elements.playText.addEventListener('click', () => this.playWithElevenLabs());
+
+        // Ferma riproduzione
+        this.elements.stopPlayback.addEventListener('click', () => this.stopPlayback());
+
         // Navigazione
-        document.getElementById('backBtn')?.addEventListener('click', () => {
-            window.location.href = 'analysis.html';
-        });
+        this.elements.nextPage.addEventListener('click', () => this.goToPreview());
 
-        document.getElementById('nextBtn')?.addEventListener('click', () => {
-            this.navigateToPreview();
-        });
-
-        // Controlli SSML
-        document.getElementById('applySSMLBtn')?.addEventListener('click', () => {
-            this.applySSMLControls();
-        });
-
-        document.getElementById('testSSMLBtn')?.addEventListener('click', () => {
-            this.testSSML();
-        });
-
-        document.getElementById('clearSSMLBtn')?.addEventListener('click', () => {
-            this.clearSSML();
-        });
-
-        document.getElementById('copySSMLBtn')?.addEventListener('click', () => {
-            this.copySSML();
-        });
-
-        // Preset rapidi
-        document.querySelectorAll('.preset-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                this.applyPreset(e.currentTarget.dataset.preset);
-            });
-        });
-
-        console.log('✅ Tutti gli event listeners configurati');
+        // Cambiamento controlli
+        this.elements.ssmlControls.addEventListener('change', () => this.updateSelectionInfo());
+        this.elements.presetControls.addEventListener('change', () => this.updateSelectionInfo());
     }
 
-    applySSMLControls() {
-        console.log('🎛️ Applicazione controlli SSML');
+    loadTextFromStorage() {
+        const storedText = localStorage.getItem('Testo per Controlli SSML');
         
-        const pauseControl = document.getElementById('pauseControl')?.value;
-        const emphasisControl = document.getElementById('emphasisControl')?.value;
-        const rateControl = document.getElementById('rateControl')?.value;
-        const volumeControl = document.getElementById('volumeControl')?.value;
-
-        // Salva i controlli applicati
-        this.ssmlControls = [
-            { type: 'pause', value: pauseControl },
-            { type: 'emphasis', value: emphasisControl },
-            { type: 'rate', value: rateControl },
-            { type: 'volume', value: volumeControl }
-        ].filter(control => control.value);
-
-        this.renderText();
-        this.generateSSMLPreview();
-        this.updateStats();
-
-        // Mostra conferma
-        this.showStatus('✅ Controlli SSML applicati', 'success');
-    }
-
-    applyPreset(preset) {
-        console.log('🎨 Applicazione preset:', preset);
-        
-        const presets = {
-            news: {
-                pause: '0.3s',
-                emphasis: 'moderate',
-                rate: '1.1',
-                volume: '1.0'
-            },
-            storytelling: {
-                pause: '1s',
-                emphasis: 'strong',
-                rate: '0.8',
-                volume: '1.0'
-            },
-            presentation: {
-                pause: '0.5s',
-                emphasis: 'moderate',
-                rate: '1.0',
-                volume: '1.2'
-            },
-            accessibility: {
-                pause: '0.7s',
-                emphasis: 'strong',
-                rate: '0.7',
-                volume: '1.0'
-            }
-        };
-
-        const presetConfig = presets[preset];
-        if (presetConfig) {
-            document.getElementById('pauseControl').value = presetConfig.pause;
-            document.getElementById('emphasisControl').value = presetConfig.emphasis;
-            document.getElementById('rateControl').value = presetConfig.rate;
-            document.getElementById('volumeControl').value = presetConfig.volume;
-
-            this.applySSMLControls();
-            this.showStatus(`✅ Preset "${preset}" applicato`, 'success');
+        if (storedText) {
+            this.elements.textArea.value = storedText;
+            console.log('✅ Testo caricato dal localStorage:', storedText.substring(0, 50) + '...');
+        } else {
+            this.elements.textArea.value = "Nessun testo disponibile. Torna alla pagina precedente per inserire il testo.";
+            console.warn('❌ Nessun testo trovato nel localStorage');
         }
     }
 
-    renderText() {
-        const textDisplay = document.getElementById('textDisplay');
-        if (!textDisplay) return;
+    handleTextSelection() {
+        const textArea = this.elements.textArea;
+        const selectionInfo = this.elements.selectionInfo;
+        
+        this.selectionStart = textArea.selectionStart;
+        this.selectionEnd = textArea.selectionEnd;
+        
+        if (this.selectionStart !== this.selectionEnd) {
+            this.selectedText = textArea.value.substring(this.selectionStart, this.selectionEnd);
+            selectionInfo.textContent = `Testo selezionato: "${this.selectedText}"`;
+            selectionInfo.style.display = 'block';
+            
+            textArea.focus();
+            textArea.setSelectionRange(this.selectionStart, this.selectionEnd);
+        } else {
+            this.selectedText = '';
+            selectionInfo.style.display = 'none';
+        }
+    }
 
-        let displayedText = this.currentText;
+    updateSelectionInfo() {
+        if (!this.selectedText) return;
 
-        // Applica formattazione SSML visiva
-        if (this.ssmlControls.length > 0) {
-            this.ssmlControls.forEach(control => {
-                switch (control.type) {
-                    case 'pause':
-                        displayedText = this.addPauseVisual(displayedText, control.value);
-                        break;
-                    case 'emphasis':
-                        displayedText = this.addEmphasisVisual(displayedText, control.value);
-                        break;
-                }
-            });
+        const ssmlControl = this.elements.ssmlControls.value;
+        const presetControl = this.elements.presetControls.value;
+        
+        let action = '';
+        if (ssmlControl) {
+            action = `Applicherà: ${this.elements.ssmlControls.options[this.elements.ssmlControls.selectedIndex].textContent}`;
+        } else if (presetControl) {
+            action = `Applicherà: ${this.elements.presetControls.options[this.elements.presetControls.selectedIndex].textContent}`;
+        }
+        
+        if (action) {
+            this.elements.selectionInfo.textContent = `Selezionato: "${this.selectedText}" - ${action}`;
+        }
+    }
+
+    // Mappa dei controlli SSML
+    ssmlMap = {
+        'break': '<break time="500ms"/>',
+        'emphasis': '<emphasis level="moderate">SELECTED_TEXT</emphasis>',
+        'prosody': '<prosody rate="medium" pitch="medium">SELECTED_TEXT</prosody>',
+        'say-as': '<say-as interpret-as="characters">SELECTED_TEXT</say-as>',
+        'phoneme': '<phoneme alphabet="ipa" ph="SELECTED_TEXT">SELECTED_TEXT</phoneme>'
+    };
+
+    // Mappa dei preset rapidi
+    presetMap = {
+        'pause-short': '<break time="1s"/>',
+        'pause-medium': '<break time="2s"/>',
+        'emphasis-strong': '<emphasis level="strong">SELECTED_TEXT</emphasis>',
+        'emphasis-moderate': '<emphasis level="moderate">SELECTED_TEXT</emphasis>',
+        'slow-speech': '<prosody rate="slow">SELECTED_TEXT</prosody>'
+    };
+
+    applySSMLFilter() {
+        const textArea = this.elements.textArea;
+        const selectionInfo = this.elements.selectionInfo;
+        
+        if (!this.selectedText) {
+            this.showStatus('❌ Seleziona prima una parte del testo!', 'error');
+            return;
+        }
+        
+        let ssmlTag = '';
+        
+        // Controlla se è stato selezionato un controllo SSML
+        const ssmlControl = this.elements.ssmlControls.value;
+        if (ssmlControl) {
+            ssmlTag = this.ssmlMap[ssmlControl];
+        }
+        
+        // Se non è stato selezionato un controllo SSML, controlla i preset
+        if (!ssmlTag) {
+            const presetControl = this.elements.presetControls.value;
+            if (presetControl) {
+                ssmlTag = this.presetMap[presetControl];
+            }
+        }
+        
+        if (!ssmlTag) {
+            this.showStatus('❌ Seleziona un controllo SSML o un preset rapido!', 'error');
+            return;
+        }
+        
+        // Sostituisce il testo selezionato con il tag SSML
+        const beforeText = textArea.value.substring(0, this.selectionStart);
+        const afterText = textArea.value.substring(this.selectionEnd);
+        const newText = ssmlTag.replace(/SELECTED_TEXT/g, this.selectedText);
+        
+        textArea.value = beforeText + newText + afterText;
+        
+        // SALVA IMMEDIATAMENTE IL TESTO CORRETTO
+        this.saveCorrectedText();
+        
+        // Aggiorna i contatori
+        this.updateCounters();
+        
+        // Reimposta la selezione
+        this.selectedText = '';
+        selectionInfo.style.display = 'none';
+        
+        // Reimposta i dropdown
+        this.elements.ssmlControls.selectedIndex = 0;
+        this.elements.presetControls.selectedIndex = 0;
+        
+        this.showStatus('✅ Filtro SSML applicato correttamente', 'success');
+    }
+
+    // SALVA IL TESTO CORRETTO CON CHIAVE SPECIFICA
+    saveCorrectedText() {
+        const correctedText = this.elements.textArea.value;
+        
+        // Salva con la chiave specifica per il testo corretto
+        localStorage.setItem('TestoCorrettoSSML', correctedText);
+        
+        // Salva anche con la chiave originale per compatibilità
+        localStorage.setItem('Testo per Controlli SSML', correctedText);
+        localStorage.setItem('metavoices_text_input', correctedText);
+        
+        console.log('💾 Testo corretto salvato:', correctedText.substring(0, 50) + '...');
+    }
+
+    // RIPRODUZIONE CON API ELEVENLABS (SUPPORTA SSML)
+    async playWithElevenLabs() {
+        const textToPlay = this.elements.textArea.value;
+        
+        if (!textToPlay || textToPlay === "Nessun testo disponibile. Torna alla pagina precedente per inserire il testo.") {
+            this.showStatus('❌ Non c\'è testo da riprodurre!', 'error');
+            return;
         }
 
-        textDisplay.innerHTML = displayedText || '<div class="empty-text">Nessun testo disponibile</div>';
-    }
+        // Recupera i dati dalla pagina precedente
+        const voiceData = JSON.parse(localStorage.getItem('metavoices_data') || '{}');
+        const apiKey = localStorage.getItem('elevenlabs_api_key');
 
-    addPauseVisual(text, pauseValue) {
-        // Aggiunge indicatori visivi per le pause
-        const pauseIcons = {
-            '0.3s': '⏱️',
-            '0.5s': '⏱️⏱️',
-            '1s': '⏱️⏱️⏱️',
-            '2s': '⏱️⏱️⏱️⏱️'
-        };
-        
-        return text.replace(/[.!?]/g, `$& ${pauseIcons[pauseValue] || '⏱️'}`);
-    }
+        if (!voiceData.voiceId || !apiKey) {
+            this.showStatus('❌ Dati voce non trovati. Torna alla pagina precedente.', 'error');
+            return;
+        }
 
-    addEmphasisVisual(text, emphasisValue) {
-        // Aggiunge enfasi visiva
-        const emphasisTags = {
-            'strong': '<strong class="emphasis-strong">$1</strong>',
-            'moderate': '<em class="emphasis-moderate">$1</em>',
-            'reduced': '<span class="emphasis-reduced">$1</span>'
-        };
+        // Ferma eventuale riproduzione in corso
+        if (this.isPlaying && this.currentAudio) {
+            this.currentAudio.pause();
+            this.currentAudio = null;
+        }
 
-        // Enfatizza le parole in maiuscolo o tra virgolette
-        return text.replace(/([A-Z][a-z]+)|("([^"]+)")/g, emphasisTags[emphasisValue] || '$1');
-    }
+        this.showStatus('🎵 Generazione audio con ElevenLabs...', 'loading');
+        this.elements.playText.style.display = 'none';
+        this.elements.stopPlayback.style.display = 'flex';
 
-    generateSSMLPreview() {
-        const ssmlPreview = document.getElementById('ssmlPreview');
-        if (!ssmlPreview) return;
+        try {
+            const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceData.voiceId}`, {
+                method: 'POST',
+                headers: {
+                    'Xi-Api-Key': apiKey,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    text: textToPlay,
+                    model_id: "eleven_multilingual_v2",
+                    voice_settings: {
+                        stability: 0.5,
+                        similarity_boost: 0.8,
+                        style: 0.2,
+                        use_speaker_boost: true
+                    }
+                })
+            });
 
-        let ssml = `<speak>\n`;
-        
-        // Aggiungi controlli SSML
-        this.ssmlControls.forEach(control => {
-            switch (control.type) {
-                case 'pause':
-                    ssml += `  <break time="${control.value}"/>\n`;
-                    break;
-                case 'emphasis':
-                    ssml += `  <emphasis level="${control.value}">\n`;
-                    break;
-                case 'rate':
-                    ssml += `  <prosody rate="${control.value}">\n`;
-                    break;
-                case 'volume':
-                    ssml += `  <prosody volume="${control.value}">\n`;
-                    break;
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(`API Error: ${response.status} - ${errorData.detail?.message || 'Unknown error'}`);
             }
-        });
 
-        ssml += `  ${this.currentText}\n`;
-        ssml += `</speak>`;
+            const audioBlob = await response.blob();
+            const audioUrl = URL.createObjectURL(audioBlob);
+            
+            // Crea e riproduci l'audio
+            this.currentAudio = new Audio(audioUrl);
+            this.isPlaying = true;
+            
+            this.currentAudio.onloadeddata = () => {
+                this.showStatus('🔊 Riproduzione in corso...', 'loading');
+                this.currentAudio.play();
+            };
 
-        ssmlPreview.textContent = ssml;
+            this.currentAudio.onended = () => {
+                this.isPlaying = false;
+                this.elements.playText.style.display = 'flex';
+                this.elements.stopPlayback.style.display = 'none';
+                this.showStatus('✅ Riproduzione completata con effetti SSML', 'success');
+                URL.revokeObjectURL(audioUrl);
+            };
+
+            this.currentAudio.onerror = (error) => {
+                this.isPlaying = false;
+                this.elements.playText.style.display = 'flex';
+                this.elements.stopPlayback.style.display = 'none';
+                this.showStatus('❌ Errore nella riproduzione audio', 'error');
+                console.error('Audio error:', error);
+                URL.revokeObjectURL(audioUrl);
+            };
+
+        } catch (error) {
+            console.error('❌ Errore chiamata ElevenLabs:', error);
+            this.isPlaying = false;
+            this.elements.playText.style.display = 'flex';
+            this.elements.stopPlayback.style.display = 'none';
+            this.showStatus(`❌ Errore: ${error.message}`, 'error');
+        }
     }
 
-    testSSML() {
-        console.log('🔊 Test SSML');
-        this.showStatus('🔊 Test audio in corso...', 'info');
+    stopPlayback() {
+        if (this.currentAudio && this.isPlaying) {
+            this.currentAudio.pause();
+            this.currentAudio = null;
+            this.isPlaying = false;
+            this.elements.playText.style.display = 'flex';
+            this.elements.stopPlayback.style.display = 'none';
+            this.showStatus('⏹️ Riproduzione interrotta', 'info');
+        }
+    }
+
+    updateCounters() {
+        const text = this.elements.textArea.value;
+        const characters = text.length;
         
-        // Simula test audio
+        // Conta i tag SSML approssimativamente
+        const ssmlTags = (text.match(/<[^>]+>/g) || []).length;
+        
+        this.elements.charCount.textContent = characters;
+        this.elements.ssmlTagsCount.textContent = ssmlTags;
+    }
+
+    goToPreview() {
+        // SALVA DEFINITIVAMENTE IL TESTO CORRETTO PRIMA DI ANDARE AVANTI
+        this.saveCorrectedText();
+        
+        // Verifica che il testo sia stato salvato
+        const savedText = localStorage.getItem('TestoCorrettoSSML');
+        if (!savedText) {
+            this.showStatus('❌ Errore nel salvataggio del testo corretto', 'error');
+            return;
+        }
+        
+        console.log('✅ Testo corretto salvato per preview:', savedText.substring(0, 50) + '...');
+        this.showStatus('✅ Testo salvato, redirect a preview...', 'success');
+        
         setTimeout(() => {
-            this.showStatus('✅ Test SSML completato', 'success');
-        }, 2000);
-    }
-
-    clearSSML() {
-        console.log('🗑️ Pulizia controlli SSML');
-        
-        // Reset controlli
-        document.getElementById('pauseControl').value = '';
-        document.getElementById('emphasisControl').value = '';
-        document.getElementById('rateControl').value = '1.0';
-        document.getElementById('volumeControl').value = '1.0';
-        
-        this.ssmlControls = [];
-        this.renderText();
-        this.generateSSMLPreview();
-        this.updateStats();
-        
-        this.showStatus('✅ Controlli SSML rimossi', 'success');
-    }
-
-    copySSML() {
-        const ssmlPreview = document.getElementById('ssmlPreview');
-        if (ssmlPreview && ssmlPreview.textContent) {
-            navigator.clipboard.writeText(ssmlPreview.textContent)
-                .then(() => this.showStatus('✅ SSML copiato negli appunti', 'success'))
-                .catch(() => this.showStatus('❌ Errore nella copia', 'error'));
-        }
-    }
-
-    navigateToPreview() {
-        console.log('📍 Navigazione a preview.html');
-        
-        // Salva dati SSML
-        const ssmlData = {
-            text: this.currentText,
-            ssmlControls: this.ssmlControls,
-            ssmlCode: document.getElementById('ssmlPreview')?.textContent || ''
-        };
-        
-        localStorage.setItem('metavoices_ssml_data', JSON.stringify(ssmlData));
-        window.location.href = 'preview.html';
-    }
-
-    updateStats() {
-        const wordCount = document.getElementById('wordCount');
-        const ssmlCount = document.getElementById('ssmlCount');
-        
-        if (wordCount) {
-            wordCount.textContent = this.currentText ? this.currentText.trim().split(/\s+/).length : 0;
-        }
-        
-        if (ssmlCount) {
-            ssmlCount.textContent = this.ssmlControls.length;
-        }
+            window.location.href = 'preview.html';
+        }, 500);
     }
 
     showStatus(message, type = 'info') {
-        const statusElement = document.getElementById('statusMessage');
-        if (statusElement) {
-            statusElement.textContent = message;
-            statusElement.className = `status status-${type}`;
-            
+        this.elements.statusText.textContent = message;
+        this.elements.playbackStatus.className = `playback-status status-${type}`;
+        this.elements.playbackStatus.style.display = 'block';
+        
+        if (type !== 'loading') {
             setTimeout(() => {
-                statusElement.textContent = '';
-                statusElement.className = 'status';
-            }, 3000);
+                this.elements.statusText.textContent = 'Pronto';
+                this.elements.playbackStatus.className = 'playback-status';
+            }, 4000);
         }
     }
 }
 
 // Inizializzazione
 document.addEventListener('DOMContentLoaded', function() {
-    window.ssmlApp = new SSMLApp();
+    window.ssmlManager = new SSMLManager();
 });
